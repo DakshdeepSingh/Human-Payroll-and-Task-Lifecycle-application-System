@@ -12,28 +12,27 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 // Serve static files
 app.use(express.static('uploads'));
+app.use(express.json());
 
-// Multer storage configuration
-const multerstorage = multer.diskStorage({
-  destination: function(req, file, callback){
-      callback(null, path.join(__dirname, 'uploads'));
+// Database content
+const employeeModel = require('./models/employeeSchema');
+
+const employeeController = require('./controllers/employeeController');
+
+const dBConnect = require('./middlewares/dB');
+dBConnect();
+
+employeeModel();
+const storage = multer.diskStorage({
+  destination: function(req, file, callback) {
+      callback(null, path.join(__dirname, 'uploads')); // Uploads folder
   },
-  filename : function(req, file, callback){
-      callback(null, Date.now() + "_" + file.originalname);
+  filename: function(req, file, callback) {
+      const userId = req.body.userId; // Get the user ID from the form data
+      callback(null, userId + path.extname(file.originalname)); // Correct use of `callback`
   }
 });
-const multerSingleUpload = multer({storage: multerstorage});
-
-// Route to handle file upload
-app.post("/photo-upload", multerSingleUpload.single('photo-upload'), function(req, res) {
-  const file = req.file;
-  if (!file) {
-      return res.send("Please choose a file to upload!");
-  }
-  console.log("File uploaded successfully:", file);
-  // res.redirect('/employee-add'); // Redirect to form page after upload
-  res.json("EMPLOYEE CREATED SUCESSFULLY");
-});
+const upload = multer({ storage: storage });
 
 // Routes
 app.get("/", (req, res) => {
@@ -51,6 +50,8 @@ app.get("/admin-login", (req, res) => {
 app.get("/employee-add", (req, res) => {
   res.render("employee-add"); 
 });
+
+app.post('/employee-add', upload.single('photo-upload'), employeeController.addEmployee);
 
 app.get("/admin-dashboard", (req, res) => {
   res.render("admin-dashboard");
