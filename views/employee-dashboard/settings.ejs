@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard - Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-p2SRgsDW1JbF2GsvHDv5z5fCrDsfX+xJeR02LfZwP4KjbJ4CpZ5p1azSfzM11tEJv54pN6p6LEIoMRkgSpXahQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .setting-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .setting-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .setting-input {
+            margin-top: 10px;
+        }
+
+        .setting-button {
+            background-color: #4f46e5; /* Indigo color */
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .setting-button:hover {
+            background-color: #4338ca; /* Darker indigo */
+        }
+    </style>
+</head>
+
+<body class="m-0 p-0 font-sans bg-gray-100 flex h-screen">
+    <div class="flex w-full">
+        <!-- Leftbar -->
+        <%- include('../employee/left-bar') %>
+        
+        <!-- Main content for settings -->
+        <main class="flex-1 p-5 space-y-5">
+            <h1 class="text-2xl font-bold mb-5">Settings</h1>
+
+            <!-- Personal Information Settings -->
+            <div class="setting-card">
+                <h2 class="setting-title">Personal Information</h2>
+                <label for="name" class="block">Name:</label>
+                <input type="text" id="name" class="setting-input w-full border rounded p-2" placeholder="Enter your name">
+                
+                <label for="email" class="block mt-4">Email:</label>
+                <input type="email" id="email" class="setting-input w-full border rounded p-2" placeholder="Enter your email">
+                
+                <label for="phone" class="block mt-4">Phone Number:</label>
+                <input type="text" id="phone" class="setting-input w-full border rounded p-2" placeholder="Enter your phone number">
+                
+                <button class="setting-button mt-4">Update Information</button>
+            </div>
+
+            <!-- Change Password Settings -->
+            <div class="setting-card">
+                <h2 class="setting-title">Change Password</h2>
+                <label for="current-password" class="block">Current Password:</label>
+                <input type="password" id="current-password" class="setting-input w-full border rounded p-2" placeholder="Enter current password">
+
+                <label for="new-password" class="block mt-4">New Password:</label>
+                <input type="password" id="new-password" class="setting-input w-full border rounded p-2" placeholder="Enter new password">
+
+                <label for="confirm-password" class="block mt-4">Confirm New Password:</label>
+                <input type="password" id="confirm-password" class="setting-input w-full border rounded p-2" placeholder="Confirm new password">
+
+                <button class="setting-button mt-4">Change Password</button>
+            </div>
+
+            <!-- Notification Preferences -->
+            <div class="setting-card">
+                <h2 class="setting-title">Notification Preferences</h2>
+                <div class="flex items-center mt-4">
+                    <input type="checkbox" id="email-notifications" class="mr-2">
+                    <label for="email-notifications">Email Notifications</label>
+                </div>
+                <div class="flex items-center mt-2">
+                    <input type="checkbox" id="sms-notifications" class="mr-2">
+                    <label for="sms-notifications">SMS Notifications</label>
+                </div>
+                <button class="setting-button mt-4">Save Preferences</button>
+            </div>
+
+            <!-- Account Settings -->
+            <div class="setting-card">
+                <h2 class="setting-title">Account Settings</h2>
+                <div class="flex items-center mt-4">
+                    <input type="checkbox" id="two-factor-auth" class="mr-2">
+                    <label for="two-factor-auth">Enable Two-Factor Authentication</label>
+                </div>
+                <button class="setting-button mt-4">Save Settings</button>
+            </div>
+        </main>
+
+        <!-- Rightbar -->
+        <%- include('../employee/right-bar') %>
+    </div>
+
+    <script>
+        // You can add any relevant scripts here if needed.
+    </script>
+</body>
+
+</html>
