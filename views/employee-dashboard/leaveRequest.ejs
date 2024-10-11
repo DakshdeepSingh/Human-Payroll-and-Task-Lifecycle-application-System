@@ -62,7 +62,7 @@
             <!-- Leave Request Form -->
             <div class="leave-card space-y-5">
                 <h3 class="text-lg font-bold">Submit Leave Request</h3>
-                <form id="leaveRequestForm" class="leave-form space-y-4">
+                <form id="leaveRequestForm" class="leave-form space-y-4" action="/leave-request" method="post">
                     <div class="flex flex-col">
                         <label for="leaveType" class="font-bold">Leave Type:</label>
                         <select id="leaveType" name="leaveType" required>
@@ -82,11 +82,10 @@
                     </div>
                     <div class="flex flex-col">
                         <label for="reason" class="font-bold">Reason:</label>
-                        <textarea id="reason" name="reason" rows="3" required
-                            class="border rounded p-2 mt-1 focus:outline-none focus:ring focus:border-indigo-500"></textarea>
+                        <textarea id="reason" name="reason" class="border rounded p-2 mt-1 focus:outline-none focus:ring focus:border-indigo-500" rows="3" required></textarea>
                     </div>
                     <button type="submit">Submit Leave Request</button>
-                </form>
+                </form>                
             </div>
 
             <!-- Leave Requests Records -->
@@ -139,18 +138,18 @@
         }
 
         // Handle form submission
-        leaveRequestForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const leaveType = document.getElementById('leaveType').value;
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
+        // leaveRequestForm.addEventListener('submit', (e) => {
+        //     const leaveType = document.getElementById('leaveType').value;
+        //     const startDate = document.getElementById('startDate').value;
+        //     const endDate = document.getElementById('endDate').value;
 
-            // Add new leave record (Assuming status is "Pending" initially)
-            addLeaveRecord(leaveType, startDate, endDate, 'Pending');
+        //     // Add new leave record (Assuming status is "Pending" initially)
+        //     addLeaveRecord(leaveType, startDate, endDate, 'Pending');
 
-            // Clear the form
-            leaveRequestForm.reset();
-        });
+        //     // The form will submit here to the server and you can still reset the form
+        //     leaveRequestForm.reset();
+        // });
+
     </script>
 </body>
 
