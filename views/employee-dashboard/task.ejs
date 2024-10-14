@@ -99,7 +99,7 @@
 
             markAsDoneButton.addEventListener('click', () => {
                 taskElement.classList.toggle('done');
-                markAsDoneButton.textContent = taskElement.classList.contains('done') ? 'Done' : 'Mark as Done';
+                markAsDoneButton.textContent = taskElement.classList.contains('done') ? 'Undo' : 'Mark as Done';
                 markAsDoneButton.classList.toggle('bg-green-500');
                 markAsDoneButton.classList.toggle('bg-indigo-600');
             });

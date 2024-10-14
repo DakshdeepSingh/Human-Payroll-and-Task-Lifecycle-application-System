@@ -17,14 +17,19 @@ app.use(express.json());
 // Database content
 const employeeModel = require('./models/employeeSchema');
 const leaveRequestModel = require('./models/leaveRequestSchema');
+const taskModel = require('./models/taskSchema'); // Model to be implemented with task.ejs
 
 const employeeController = require('./controllers/employeeController');
 const leaveRequestController = require('./controllers/leaveRequestController');
+const taskController = require('./controllers/taskController');
 
 const dBConnect = require('./middlewares/dB');
 dBConnect();
 
 employeeModel();
+leaveRequestModel();
+taskModel();
+
 const storage = multer.diskStorage({
   destination: function(req, file, callback) {
       callback(null, path.join(__dirname, 'uploads')); // Uploads folder
