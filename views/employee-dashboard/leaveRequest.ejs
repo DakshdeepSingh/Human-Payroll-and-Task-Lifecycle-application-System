@@ -49,17 +49,6 @@
             padding: 10px 20px;
             border-radius: 4px;
         }
-
-        /* Status Colors */
-        .status-approved {
-            color: green;
-            font-weight: bold;
-        }
-
-        .status-pending {
-            color: orange;
-            font-weight: bold;
-        }
     </style>
 </head>
 
@@ -73,7 +62,7 @@
             <!-- Leave Request Form -->
             <div class="leave-card space-y-5">
                 <h3 class="text-lg font-bold">Submit Leave Request</h3>
-                <form id="leaveRequestForm" class="leave-form space-y-4">
+                <form id="leaveRequestForm" class="leave-form space-y-4" action="/leave-request" method="post">
                     <div class="flex flex-col">
                         <label for="leaveType" class="font-bold">Leave Type:</label>
                         <select id="leaveType" name="leaveType" required>
@@ -93,11 +82,10 @@
                     </div>
                     <div class="flex flex-col">
                         <label for="reason" class="font-bold">Reason:</label>
-                        <textarea id="reason" name="reason" rows="3" required
-                            class="border rounded p-2 mt-1 focus:outline-none focus:ring focus:border-indigo-500"></textarea>
+                        <textarea id="reason" name="reason" class="border rounded p-2 mt-1 focus:outline-none focus:ring focus:border-indigo-500" rows="3" required></textarea>
                     </div>
                     <button type="submit">Submit Leave Request</button>
-                </form>
+                </form>                
             </div>
 
             <!-- Leave Requests Records -->
@@ -117,13 +105,13 @@
                             <td>Sick Leave</td>
                             <td>01-Oct-2024</td>
                             <td>03-Oct-2024</td>
-                            <td class="status-approved">Approved</td>
+                            <td>Approved</td>
                         </tr>
                         <tr>
                             <td>Vacation Leave</td>
                             <td>15-Oct-2024</td>
                             <td>20-Oct-2024</td>
-                            <td class="status-pending">Pending</td>
+                            <td>Pending</td>
                         </tr>
                     </tbody>
                 </table>
@@ -137,33 +125,18 @@
         const leaveRequestForm = document.getElementById('leaveRequestForm');
         const leaveRecords = document.getElementById('leaveRecords');
 
-        // Function to add new leave request entry with status color
+        // Function to add new leave request entry
         function addLeaveRecord(type, startDate, endDate, status) {
             const newRow = document.createElement('tr');
-            const statusClass = status === 'Approved' ? 'status-approved' : 'status-pending';
-
             newRow.innerHTML = `
                 <td>${type}</td>
                 <td>${startDate}</td>
                 <td>${endDate}</td>
-                <td class="${statusClass}">${status}</td>
+                <td>${status}</td>
             `;
             leaveRecords.appendChild(newRow);
         }
 
-        // Handle form submission
-        leaveRequestForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const leaveType = document.getElementById('leaveType').value;
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-
-            // Add new leave record (Assuming status is "Pending" initially)
-            addLeaveRecord(leaveType, startDate, endDate, 'Pending');
-
-            // Clear the form
-            leaveRequestForm.reset();
-        });
     </script>
 </body>
 
