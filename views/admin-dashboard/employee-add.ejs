@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <title>Employee Add</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            min-height: 100vh;
+            display: flex;
+        }
+        .content {
+            flex: 1;
+            background-color: #f7f9fc;
+        }
+        .form-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .input-field {
+            background-color: #e0e7ff;
+            border: 1px solid #d0d7ff;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .button-primary {
+            background-color: #7367f0;
+            color: #ffffff;
+            border-radius: 8px;
+            padding: 12px 24px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .button-primary:hover {
+            background-color: #5a56c6;
+            transform: translateY(-2px) scale(1.02);
+        }
+        .button-primary:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(115, 103, 240, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-background text-primary-foreground dark:bg-primary dark:text-primary-foreground">
+    <div class="container">
+        <!--Sidebar -->
+        <%- include('../admin-left-bar') %>
+    
+
+        <!-- Main Content -->
+        <div class="flex-1 p-6">
+            <div class="form-container p-6">
+                <h2 class="text-2xl font-extrabold mb-6 text-indigo-800 bg-gradient-to-r from-[#7367f0] via-[#abc4ff] to-[#e0e7ff] text-transparent bg-clip-text shadow-lg p-3 rounded-lg">
+                    Add New Employee
+                </h2>
+                <form class="grid grid-cols-1 sm:grid-cols-2 gap-4" action="/employee-add" method="post" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label for="firstName" class="block text-sm font-medium">First Name</label>
+                        <input type="text" id="firstName" name="firstName" placeholder="John" class="w-full px-3 py-2 rounded-lg input-field focus:outline-none focus:ring-2 focus:ring-primary" />
+                    </div>
+                    <div class="mb-4">
+                        <label for="lastName" class="block text-sm font-medium">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" placeholder="Doe" class="w-full px-3 py-2 rounded-lg input-field focus:outline-none focus:ring-2 focus:ring-primary" />
+                    </div>
+                    <div class="mb-4 sm:col-span-2">
+                        <label for="address" class="block text-sm font-medium">Address</label>
+                        <input type="text" id="address" name="address" placeholder="123 Main St, City" class="w-full px-3 py-2 rounded-lg input-field focus:outline-none focus:ring-2 focus:ring-primary" />
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium">Email</label>
+                        <input type="email" id="email" name="email" placeholder="john.doe@example.com" class="w-full px-3 py-2 rounded-lg input-field focus:outline-none focus:ring-2 focus:ring-primary" />
+                    </div>
+                    <div class="mb-4">
+                        <label for="age" class="block text-sm font-medium">Age</label>
+                        <input type="number" id="age" name="age" placeholder="30" class="w-full px-3 py-2 rounded-lg input-field focus:outline-none focus:ring-2 focus:ring-primary" />
+                    </div>
+                    <div class="mb-4">
+                        <label for="salary" class="block text-sm font-medium">Salary</label>
+                        <input type="number" id="salary" name="salary" placeholder="50000" class="w-full px-3 py-2 rounded-lg input-field focus:outline-none focus:ring-2 focus:ring-primary" />
+                    </div>
+                    <div class="mb-4">
+                        <label for="designation" class="block text-sm font-medium">Designation</label>
+                        <input type="text" id="designation" name="designation" placeholder="Software Engineer" class="w-full px-3 py-2 rounded-lg input-field focus:outline-none focus:ring-2 focus:ring-primary" />
+                    </div>
+                    <div class="mb-4">
+                        <label for="passportNumber" class="block text-sm font-medium">Passport Number</label>
+                        <input type="text" id="passportNumber" name="passportNumber" placeholder="A12345678" class="w-full px-3 py-2 rounded-lg input-field focus:outline-none focus:ring-2 focus:ring-primary" />
+                    </div>
+                    <div class="mb-4">
+                        <label for="nominee" class="block text-sm font-medium">Nominee</label>
+                        <input type="text" id="nominee" name="nominee" placeholder="Jane Doe" class="w-full px-3 py-2 rounded-lg input-field focus:outline-none focus:ring-2 focus:ring-primary" />
+                    </div>
+                    <div class="mb-4">
+                        <label for="userId" class="block text-sm font-medium">User ID</label>
+                        <input type="text" id="userId" name="userId" placeholder="john.doe" class="w-full px-3 py-2 rounded-lg input-field focus:outline-none focus:ring-2 focus:ring-primary" />
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="block text-sm font-medium">Password</label>
+                        <input type="password" id="password" name="password" placeholder="********" class="w-full px-3 py-2 rounded-lg input-field focus:outline-none focus:ring-2 focus:ring-primary" />
+                    </div>
+                    <div class="mb-4">
+                        <label for="photo-upload" class="block text-sm font-medium">Upload Photo</label>
+                        <input type="file" id="photo-upload" name="photo-upload" accept="image/*" class="w-full px-3 py-2 rounded-lg input-field focus:outline-none focus:ring-2 focus:ring-primary" />
+                    </div>
+                    <!-- Additional form fields... -->
+                    <div class="sm:col-span-2 flex justify-end">
+                        <button type="submit" class="button-primary">Add Employee</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<%- include('../footer') %>

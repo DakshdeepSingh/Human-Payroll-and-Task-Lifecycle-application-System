@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <title>Admin Dashboard - Attendance</title>
+</head>
+<body class="bg-background text-primary-foreground dark:bg-primary dark:text-primary-foreground">
+    <div class="container flex">
+        <!-- Sidebar -->
+        <%- include('../admin-left-bar') %>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-6">
+            <h2 class="text-2xl font-semibold mb-4">Employee Attendance</h2>
+            <div class="mb-4">
+                <label for="attendance-date" class="block text-sm font-medium">Select Date:</label>
+                <input type="date" id="attendance-date" class="mt-1 border border-gray-300 rounded-md p-2">
+                <button class="mt-2 bg-indigo-600 text-white rounded-lg px-4 py-2 hover:bg-indigo-700">
+                    Show Attendance
+                </button>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white border border-gray-200">
+                    <thead>
+                        <tr class="bg-gray-200 text-left">
+                            <th class="py-2 px-4 border-b">Employee Name</th>
+                            <th class="py-2 px-4 border-b">Date</th>
+                            <th class="py-2 px-4 border-b">Status</th>
+                            <th class="py-2 px-4 border-b">Leave Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Example Row 1 -->
+                        <tr class="hover:bg-gray-100">
+                            <td class="py-2 px-4 border-b">John Doe</td>
+                            <td class="py-2 px-4 border-b">2024-10-13</td>
+                            <td class="py-2 px-4 border-b">Present</td>
+                            <td class="py-2 px-4 border-b">N/A</td>
+                        </tr>
+                        <!-- Example Row 2 -->
+                        <tr class="hover:bg-gray-100">
+                            <td class="py-2 px-4 border-b">Jane Smith</td>
+                            <td class="py-2 px-4 border-b">2024-10-13</td>
+                            <td class="py-2 px-4 border-b">Absent</td>
+                            <td class="py-2 px-4 border-b">N/A</td>
+                        </tr>
+                        <!-- Example Row 3 -->
+                        <tr class="hover:bg-gray-100">
+                            <td class="py-2 px-4 border-b">Mike Johnson</td>
+                            <td class="py-2 px-4 border-b">2024-10-13</td>
+                            <td class="py-2 px-4 border-b">Leave</td>
+                            <td class="py-2 px-4 border-b">Annual Leave</td>
+                        </tr>
+                        <!-- Add more rows as necessary -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Monthly Attendance Report -->
+            <h3 class="text-xl font-semibold mt-6 mb-4">Monthly Attendance Report</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white border border-gray-200">
+                    <thead>
+                        <tr class="bg-gray-200 text-left">
+                            <th class="py-2 px-4 border-b">Employee Name</th>
+                            <th class="py-2 px-4 border-b">Total Present</th>
+                            <th class="py-2 px-4 border-b">Total Absent</th>
+                            <th class="py-2 px-4 border-b">Total Leave</th>
+                            <th class="py-2 px-4 border-b">Attendance Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Example Row 1 -->
+                        <tr class="hover:bg-gray-100">
+                            <td class="py-2 px-4 border-b">John Doe</td>
+                            <td class="py-2 px-4 border-b">20</td>
+                            <td class="py-2 px-4 border-b">2</td>
+                            <td class="py-2 px-4 border-b">1</td>
+                            <td class="py-2 px-4 border-b">90%</td>
+                        </tr>
+                        <!-- Example Row 2 -->
+                        <tr class="hover:bg-gray-100">
+                            <td class="py-2 px-4 border-b">Jane Smith</td>
+                            <td class="py-2 px-4 border-b">18</td>
+                            <td class="py-2 px-4 border-b">4</td>
+                            <td class="py-2 px-4 border-b">0</td>
+                            <td class="py-2 px-4 border-b">82%</td>
+                        </tr>
+                        <!-- Add more rows as necessary -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
+<%- include('../footer') %>
