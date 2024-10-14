@@ -41,6 +41,7 @@ const employeeSchema = new mongoose.Schema({
     userId: {
         type: Number,
         required: true,
+        unique: true
     },
     password: {
         type: String,

@@ -16,8 +16,10 @@ app.use(express.json());
 
 // Database content
 const employeeModel = require('./models/employeeSchema');
+const leaveRequestModel = require('./models/leaveRequestSchema');
 
 const employeeController = require('./controllers/employeeController');
+const leaveRequestController = require('./controllers/leaveRequestController');
 
 const dBConnect = require('./middlewares/dB');
 dBConnect();
@@ -47,15 +49,30 @@ app.get("/admin-login", (req, res) => {
   res.render("admin-login");
 });
 
-app.get("/employee-add", (req, res) => {
-  res.render("employee-add"); 
+
+app.get("/admin/admin-dashboard", (req, res) => {
+  res.render("admin-Dashboard");
 });
 
+app.get("/admin/admin-attendance", (req, res) => {
+  res.render("admin-dashboard/admin-attendance");
+});
+app.get("/admin/report", (req, res) => {
+  res.render("admin-dashboard/report");
+});
+app.get("/admin/employee-add", (req, res) => {
+  res.render("admin-dashboard/employee-add");
+});
 app.post('/employee-add', upload.single('photo-upload'), employeeController.addEmployee);
-
-app.get("/admin-dashboard", (req, res) => {
-  res.render("admin-dashboard");
+app.get("/admin/IDCard", (req, res) => {
+  res.render("admin-dashboard/IDCard");
 });
+
+app.get("/admin/admin-task", (req, res) => {
+  res.render("admin-dashboard/admin-task");
+});
+
+
 app.get("/employee-dashboard", (req, res) => {
   res.render("employee-dashboard");
 });
@@ -85,28 +102,11 @@ app.get("/employee-dashboard/trainingSession", (req, res) => {
 app.get("/employee-dashboard/leaveRequest", (req, res) => {
   res.render("employee-dashboard/leaveRequest");
 });
+app.post('/leave-request', leaveRequestController.leaveRequest);
 app.get("/employee-dashboard/settings", (req, res) => {
   res.render("employee-dashboard/settings");
 });
-app.get("/employee-dashboard/support", (req, res) => {
-  res.render("employee-dashboard/support");
-});
 
-app.get("/admin-dashboard/admin-attendance", (req, res) => {
-  res.render("admin-dashboard/admin-attendance");
-});
-app.get("/admin-dashboard/employee-add", (req, res) => {
-  res.render("admin-dashboard/employee-add");
-});
-app.get("/admin-dashboard/IDCard", (req, res) => {
-  res.render("admin-dashboard/IDCard");
-});
-app.get("/admin-dashboard/report", (req, res) => {
-  res.render("admin-dashboard/report");
-});
-app.get("/admin-dashboard/task", (req, res) => {
-  res.render("admin-dashboard/task");
-});
 // Start server
 app.listen(PORT, () => {
   console.log(`Server started at http://localhost:${PORT}`);

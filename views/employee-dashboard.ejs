@@ -30,7 +30,6 @@
 <body class="m-0 p-0 font-sans bg-gray-100 flex h-screen">
     <div class="flex w-full">
 
-
         <!-- Leftbar -->
         <%- include('employee/left-bar') %>
 
@@ -107,6 +106,7 @@
                         </a>
                     </div>
 
+                    <!-- Training Sessions Widget -->
                     <div class="bg-white p-5 rounded-lg shadow-lg widget">
                         <div>
                             <h3 class="text-lg font-bold">Training Sessions</h3>
@@ -122,19 +122,25 @@
 
                 <!-- To-Do List for Employee Tasks -->
                 <div class="bg-white p-5 rounded-lg shadow-lg space-y-4">
-                    <h3 class="text-lg font-bold">To-Do List</h3>
-                    <ul class="space-y-2">
-                        <li class="flex justify-between items-center p-2 bg-gray-100 rounded-lg hover:bg-blue-100">
-                            Finish quarterly report <button
-                                class="bg-indigo-600 text-white px-3 py-1 rounded mark-as-done">Mark as Done</button>
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-bold">To-Do List</h3>
+                        <button id="addTaskBtn" class="bg-green-500 text-white px-4 py-2 rounded">+ Add Task</button>
+                    </div>
+                    <ul id="taskList" class="space-y-2">
+                        <!-- Example Tasks -->
+                        <li class="task-item flex justify-between items-center p-2 bg-gray-100 rounded-lg hover:bg-blue-100">
+                            Finish quarterly report
+                            <div class="flex space-x-2">
+                                <button class="mark-as-done bg-indigo-600 text-white px-3 py-1 rounded">Mark as Done</button>
+                                <button class="delete-task bg-red-600 text-white px-3 py-1 rounded">Delete</button>
+                            </div>
                         </li>
-                        <li class="flex justify-between items-center p-2 bg-gray-100 rounded-lg hover:bg-blue-100">
-                            Attend training session on 5th Oct <button
-                                class="bg-indigo-600 text-white px-3 py-1 rounded mark-as-done">Mark as Done</button>
-                        </li>
-                        <li class="flex justify-between items-center p-2 bg-gray-100 rounded-lg hover:bg-blue-100">
-                            Submit leave request for 10th Oct <button
-                                class="bg-indigo-600 text-white px-3 py-1 rounded mark-as-done">Mark as Done</button>
+                        <li class="task-item flex justify-between items-center p-2 bg-gray-100 rounded-lg hover:bg-blue-100">
+                            Attend training session on 5th Oct
+                            <div class="flex space-x-2">
+                                <button class="mark-as-done bg-indigo-600 text-white px-3 py-1 rounded">Mark as Done</button>
+                                <button class="delete-task bg-red-600 text-white px-3 py-1 rounded">Delete</button>
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -145,15 +151,58 @@
     </div>
 
     <script>
-        // JavaScript for "Mark as Done" button
+        // Function to toggle 'Mark as Done' button
+        function toggleTaskCompletion(button) {
+            button.classList.toggle('active');
+            if (button.classList.contains('active')) {
+                button.textContent = 'Done';
+            } else {
+                button.textContent = 'Mark as Done';
+            }
+        }
+
+        // Function to delete a task
+        function deleteTask(taskItem) {
+            taskItem.remove();
+        }
+
+        // Add task event listener
+        document.getElementById('addTaskBtn').addEventListener('click', function () {
+            const taskDescription = prompt('Enter new task:');
+            if (taskDescription) {
+                const taskList = document.getElementById('taskList');
+                const newTaskItem = document.createElement('li');
+                newTaskItem.classList.add('task-item', 'flex', 'justify-between', 'items-center', 'p-2', 'bg-gray-100', 'rounded-lg', 'hover:bg-blue-100');
+                newTaskItem.innerHTML = `
+                    ${taskDescription}
+                    <div class="flex space-x-2">
+                        <button class="mark-as-done bg-indigo-600 text-white px-3 py-1 rounded">Mark as Done</button>
+                        <button class="delete-task bg-red-600 text-white px-3 py-1 rounded">Delete</button>
+                    </div>
+                `;
+                taskList.appendChild(newTaskItem);
+
+                // Attach event listeners for new buttons
+                newTaskItem.querySelector('.mark-as-done').addEventListener('click', function () {
+                    toggleTaskCompletion(this);
+                });
+
+                newTaskItem.querySelector('.delete-task').addEventListener('click', function () {
+                    deleteTask(newTaskItem);
+                });
+            }
+        });
+
+        // Initial event listeners for existing tasks
         document.querySelectorAll('.mark-as-done').forEach(button => {
-            button.addEventListener('click', () => {
-                button.classList.toggle('active');
-                if (button.classList.contains('active')) {
-                    button.textContent = 'Done';
-                } else {
-                    button.textContent = 'Mark as Done';
-                }
+            button.addEventListener('click', function () {
+                toggleTaskCompletion(this);
+            });
+        });
+
+        document.querySelectorAll('.delete-task').forEach(button => {
+            button.addEventListener('click', function () {
+                deleteTask(button.closest('.task-item'));
             });
         });
     </script>

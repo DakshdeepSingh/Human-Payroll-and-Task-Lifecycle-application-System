@@ -49,6 +49,17 @@
             padding: 10px 20px;
             border-radius: 4px;
         }
+
+        /* Status Colors */
+        .status-approved {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: orange;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -106,13 +117,13 @@
                             <td>Sick Leave</td>
                             <td>01-Oct-2024</td>
                             <td>03-Oct-2024</td>
-                            <td>Approved</td>
+                            <td class="status-approved">Approved</td>
                         </tr>
                         <tr>
                             <td>Vacation Leave</td>
                             <td>15-Oct-2024</td>
                             <td>20-Oct-2024</td>
-                            <td>Pending</td>
+                            <td class="status-pending">Pending</td>
                         </tr>
                     </tbody>
                 </table>
@@ -126,14 +137,16 @@
         const leaveRequestForm = document.getElementById('leaveRequestForm');
         const leaveRecords = document.getElementById('leaveRecords');
 
-        // Function to add new leave request entry
+        // Function to add new leave request entry with status color
         function addLeaveRecord(type, startDate, endDate, status) {
             const newRow = document.createElement('tr');
+            const statusClass = status === 'Approved' ? 'status-approved' : 'status-pending';
+
             newRow.innerHTML = `
                 <td>${type}</td>
                 <td>${startDate}</td>
                 <td>${endDate}</td>
-                <td>${status}</td>
+                <td class="${statusClass}">${status}</td>
             `;
             leaveRecords.appendChild(newRow);
         }

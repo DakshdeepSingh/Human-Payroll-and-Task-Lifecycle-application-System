@@ -47,7 +47,7 @@
 
         <!-- Main content for tasks -->
         <main class="flex-1 p-5 space-y-5">
-            <h1 class="text-2xl font-bold mb-5">Task Management</h1>
+            <h1 class="text-2xl font-bold mb-5">Task Status</h1>
 
             <!-- Task List -->
             <div id="taskList" class="bg-white p-5 rounded-lg shadow-lg space-y-4">
@@ -61,36 +61,31 @@
                     </div>
                     <div class="task-actions">
                         <button class="bg-indigo-600 text-white px-3 py-1 rounded mark-as-done">Mark as Done</button>
-                        <button class="bg-red-600 text-white px-3 py-1 rounded delete-task">Delete</button>
                     </div>
                 </div>
 
-                <!-- Task items will be dynamically added here -->
-            </div>
-
-            <!-- Add New Task Form -->
-            <div class="bg-white p-5 rounded-lg shadow-lg space-y-4">
-                <h3 class="text-lg font-bold">Add New Task</h3>
-                <form id="addTaskForm" class="space-y-4">
-                    <div class="flex flex-col">
-                        <label for="taskName" class="font-bold">Task Name:</label>
-                        <input type="text" id="taskName" name="taskName"
-                            class="border rounded p-2 mt-1 focus:outline-none focus:ring focus:border-indigo-500">
+                <!-- Example Task Item 2 -->
+                <div class="task-card" data-task-id="2">
+                    <div class="task-info">
+                        <p class="font-bold">Attend Performance Review Meeting</p>
+                        <p class="text-gray-500">Due: 15th Nov</p>
                     </div>
-
-                    <div class="flex flex-col">
-                        <label for="taskDueDate" class="font-bold">Due Date:</label>
-                        <input type="date" id="taskDueDate" name="taskDueDate"
-                            class="border rounded p-2 mt-1 focus:outline-none focus:ring focus:border-indigo-500">
+                    <div class="task-actions">
+                        <button class="bg-indigo-600 text-white px-3 py-1 rounded mark-as-done">Mark as Done</button>
                     </div>
+                </div>
 
-                    <button type="button" id="addTaskButton"
-                        class="bg-indigo-600 text-white px-4 py-2 rounded-lg mt-auto">
-                        Add Task
-                    </button>
-                </form>
+                <!-- Example Task Item 3 -->
+                <div class="task-card" data-task-id="3">
+                    <div class="task-info">
+                        <p class="font-bold">Prepare Quarterly Report</p>
+                        <p class="text-gray-500">Due: 5th Oct</p>
+                    </div>
+                    <div class="task-actions">
+                        <button class="bg-indigo-600 text-white px-3 py-1 rounded mark-as-done">Mark as Done</button>
+                    </div>
+                </div>
             </div>
-
         </main>
 
         <!-- Rightbar -->
@@ -98,10 +93,9 @@
     </div>
 
     <script>
-        // Handle "Mark as Done" and "Delete" actions
+        // Handle "Mark as Done" action
         function handleTaskActions(taskElement) {
             const markAsDoneButton = taskElement.querySelector('.mark-as-done');
-            const deleteButton = taskElement.querySelector('.delete-task');
 
             markAsDoneButton.addEventListener('click', () => {
                 taskElement.classList.toggle('done');
@@ -109,45 +103,7 @@
                 markAsDoneButton.classList.toggle('bg-green-500');
                 markAsDoneButton.classList.toggle('bg-indigo-600');
             });
-
-            deleteButton.addEventListener('click', () => {
-                taskElement.remove();
-            });
         }
-
-        // Dynamically add tasks
-        document.getElementById('addTaskButton').addEventListener('click', () => {
-            const taskName = document.getElementById('taskName').value;
-            const taskDueDate = document.getElementById('taskDueDate').value;
-
-            if (taskName && taskDueDate) {
-                const taskList = document.getElementById('taskList');
-
-                // Create a new task card
-                const newTask = document.createElement('div');
-                newTask.classList.add('task-card');
-                newTask.innerHTML = `
-                    <div class="task-info">
-                        <p class="font-bold">${taskName}</p>
-                        <p class="text-gray-500">Due: ${taskDueDate}</p>
-                    </div>
-                    <div class="task-actions">
-                        <button class="bg-indigo-600 text-white px-3 py-1 rounded mark-as-done">Mark as Done</button>
-                        <button class="bg-red-600 text-white px-3 py-1 rounded delete-task">Delete</button>
-                    </div>
-                `;
-
-                // Append the new task to the list
-                taskList.appendChild(newTask);
-
-                // Clear form inputs
-                document.getElementById('taskName').value = '';
-                document.getElementById('taskDueDate').value = '';
-
-                // Add event listeners to the new task
-                handleTaskActions(newTask);
-            }
-        });
 
         // Attach event listeners to the existing tasks
         document.querySelectorAll('.task-card').forEach(taskElement => {

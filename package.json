@@ -14,7 +14,7 @@
     "multer",
     "etc."
   ],
-  "author": "DEVANG SETHI , DISHA SHARMA , DAKSHDEEP SINGH, VANSHIKA TAKKAR",
+  "author": "DEVANG SETHI , DISHA SHARMA , DAKSHDEEP SINGH",
   "license": "ISC",
   "dependencies": {
     "ejs": "^3.1.10",

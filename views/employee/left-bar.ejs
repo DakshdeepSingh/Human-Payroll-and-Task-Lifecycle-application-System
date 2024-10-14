@@ -16,7 +16,7 @@
 <body class="m-0 p-0 font-sans bg-gray-100 flex h-screen">
 
     <!-- Sidebar -->
-    <aside class="bg-white w-64 p-5 shadow-lg space-y-5">
+    <aside class="bg-white w-64 h-full p-5 shadow-lg space-y-5">
         <!-- Employee Profile Section -->
         <div class="flex lg:flex-1">
             <a href="/" class="-m-1.5 p-1.5 flex">
@@ -33,67 +33,77 @@
                 <img src="profile.png" alt="Employee Profile Picture" class="w-24 h-24 rounded-full mb-2">
                 <h3 class="text-lg font-bold">John Doe</h3>
                 <p class="text-sm text-gray-500">Employee ID: 12345</p>
+                <div class="mb-4"></div> <!-- Added space below Employee ID -->
             </div>
 
             <!-- Sidebar Navigation Menu -->
             <nav>
                 <ul class="space-y-2">
-                    <a href="/employee-dashboard">
-                        <li class="flex items-center space-x-2 p-2 rounded-lg bg-blue-100 cursor-pointer">
+                    <a href="/employee-dashboard" class="menu-item" data-section="employee-dashboard">
+                        <li class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors duration-300">
                             <span class="material-symbols-outlined">dashboard</span>
                             <span>Dashboard</span>
                         </li>
                     </a>
-                    <a href="/employee-dashboard/task">
-                        <li class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-blue-100">
+                    <a href="/employee-dashboard/task" class="menu-item" data-section="task">
+                        <li class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors duration-300">
                             <span class="material-symbols-outlined">task</span>
                             <span>Task</span>
                         </li>
                     </a>
-                    <a href="/employee-dashboard/performance">
-                        <li class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-blue-100">
+                    <a href="/employee-dashboard/performance" class="menu-item" data-section="performance">
+                        <li class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors duration-300">
                             <span class="material-symbols-outlined">assignment</span>
                             <span>Reports</span>
                         </li>
                     </a>
-                    <a href="/employee-dashboard/payroll">
-                        <li class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-blue-100">
+                    <a href="/employee-dashboard/payroll" class="menu-item" data-section="payroll">
+                        <li class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors duration-300">
                             <span class="material-symbols-outlined">receipt_long</span>
                             <span>Payroll</span>
                         </li>
                     </a>
-                    <a href="/employee-dashboard/attendance">
-                        <li class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-blue-100">
+                    <a href="/employee-dashboard/attendance" class="menu-item" data-section="attendance">
+                        <li class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors duration-300">
                             <span class="material-symbols-outlined">how_to_reg</span>
                             <span>Attendance</span>
                         </li>
                     </a>
-                    <a href="/employee-dashboard/leaveRequest">
-                        <li class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-blue-100">
+                    <a href="/employee-dashboard/leaveRequest" class="menu-item" data-section="leaveRequest">
+                        <li class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors duration-300">
                             <span class="material-symbols-outlined">door_open</span>
                             <span>Leave Requests</span>
                         </li>
                     </a>
-                    <a href="/employee-dashboard/settings">
-                        <li class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-blue-100">
+                    <a href="/employee-dashboard/settings" class="menu-item" data-section="settings">
+                        <li class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors duration-300">
                             <span class="material-symbols-outlined">settings</span>
                             <span>Settings</span>
-                        </li>
-                    </a>
-                    <a href="/employee-dashboard/support">
-                        <li class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-blue-100">
-                            <span class="material-symbols-outlined">help</span>
-                            <span>Support</span>
                         </li>
                     </a>
                 </ul>
             </nav>
 
-            <div class="mt-auto p-2 bg-blue-500 text-white rounded-lg text-center cursor-pointer">
+            <div class="mt-10 p-2 bg-blue-500 text-white rounded-lg text-center cursor-pointer">
                 Logout
             </div>
+        </nav>
     </aside>
 
+    <script>
+        // Highlight the active menu item
+        const currentPage = window.location.pathname.split('/').pop(); // Get the current page
+        const menuItems = document.querySelectorAll('.menu-item');
+
+        menuItems.forEach(item => {
+            const section = item.getAttribute('data-section');
+            if (currentPage === section) {
+                item.querySelector('li').classList.add('bg-blue-100'); // Add background color for active item
+            } else {
+                item.querySelector('li').classList.remove('bg-blue-100'); // Remove background color for inactive items
+            }
+        });
+    </script>
 </body>
 
 </html>
