@@ -20,7 +20,6 @@ const leaveRequest = new mongoose.Schema({
     reason: {
         type: String,
         required: true,
-        unique: true,
     }
 });
 

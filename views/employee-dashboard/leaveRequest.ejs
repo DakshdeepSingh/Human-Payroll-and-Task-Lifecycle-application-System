@@ -97,22 +97,20 @@
                             <th>Leave Type</th>
                             <th>Start Date</th>
                             <th>End Date</th>
+                            <th>Reason</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody id="leaveRecords">
-                        <tr>
-                            <td>Sick Leave</td>
-                            <td>01-Oct-2024</td>
-                            <td>03-Oct-2024</td>
-                            <td>Approved</td>
-                        </tr>
-                        <tr>
-                            <td>Vacation Leave</td>
-                            <td>15-Oct-2024</td>
-                            <td>20-Oct-2024</td>
-                            <td>Pending</td>
-                        </tr>
+                        <% leaves.forEach(function(leaveRequest) { %>
+                            <tr>
+                                <td><%= leaveRequest.leaveType %></td>
+                                <td><%= leaveRequest.startDate.toLocaleDateString() %></td>
+                                <td><%= leaveRequest.endDate.toLocaleDateString() %></td>
+                                <td><%= leaveRequest.reason %></td>
+                                <td><%= leaveRequest.status || 'Pending' %></td>
+                            </tr>
+                        <% }); %>
                     </tbody>
                 </table>
             </div>
@@ -120,24 +118,6 @@
         <!-- Rightbar -->
         <%- include('../employee/right-bar') %>
     </div>
-
-    <script>
-        const leaveRequestForm = document.getElementById('leaveRequestForm');
-        const leaveRecords = document.getElementById('leaveRecords');
-
-        // Function to add new leave request entry
-        function addLeaveRecord(type, startDate, endDate, status) {
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td>${type}</td>
-                <td>${startDate}</td>
-                <td>${endDate}</td>
-                <td>${status}</td>
-            `;
-            leaveRecords.appendChild(newRow);
-        }
-
-    </script>
 </body>
 
 </html>

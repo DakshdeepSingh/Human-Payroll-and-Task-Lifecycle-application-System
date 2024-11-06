@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static('uploads'));
 app.use(express.json());
 
-// Database content
+// MARK: - Database Content
 const employeeModel = require('./models/employeeSchema');
 const leaveRequestModel = require('./models/leaveRequestSchema');
 const taskModel = require('./models/taskSchema'); // Model to be implemented with task.ejs
@@ -41,7 +41,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Routes
+// MARK: - Routes
 app.get("/", (req, res) => {
   // res.send("Hello world");
   res.render("landing");
@@ -54,7 +54,7 @@ app.get("/admin-login", (req, res) => {
   res.render("admin-login");
 });
 
-
+// MARK: - Admin APIs
 app.get("/admin/admin-dashboard", (req, res) => {
   res.render("admin-Dashboard");
 });
@@ -77,7 +77,7 @@ app.get("/admin/admin-task", (req, res) => {
   res.render("admin-dashboard/admin-task");
 });
 
-
+// MARK: - Employee APIs
 app.get("/employee-dashboard", (req, res) => {
   res.render("employee-dashboard");
 });
@@ -104,15 +104,23 @@ app.get("/employee-dashboard/performance", (req, res) => {
 app.get("/employee-dashboard/trainingSession", (req, res) => {
   res.render("employee-dashboard/trainingSession");
 });
-app.get("/employee-dashboard/leaveRequest", (req, res) => {
-  res.render("employee-dashboard/leaveRequest");
+app.get("/employee-dashboard/leaveRequest", async (req, res) => {
+  try {
+      const leaveRequests = await leaveRequestModel.find({});
+      res.render("employee-dashboard/leaveRequest", {
+          leaves: leaveRequests
+      });
+  } catch (err) {
+      console.error("Error fetching leave requests:", err);
+      res.status(500).send("Internal Server Error");
+  }
 });
 app.post('/leave-request', leaveRequestController.leaveRequest);
 app.get("/employee-dashboard/settings", (req, res) => {
   res.render("employee-dashboard/settings");
 });
 
-// Start server
+// MARK: - Start server
 app.listen(PORT, () => {
   console.log(`Server started at http://localhost:${PORT}`);
 });
