@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard - Attendance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-p2SRgsDW1JbF2GsvHDv5z5fCrDsfX+xJeR02LfZwP4KjbJ4CpZ5p1azSfzM11tEJv54pN6p6LEIoMRkgSpXahQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom styling for attendance page */
+        .attendance-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .attendance-table th,
+        .attendance-table td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        .attendance-table th {
+            background-color: #4f46e5;
+            color: white;
+        }
+
+        .attendance-table tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        /* Mark Leave with red text */
+        .leave-status {
+            color: red;
+        }
+
+        #attendanceChartContainer {
+            width: 220px; /* Adjust the width to provide some padding */
+            height: 220px; /* Adjust the height accordingly */
+            display: flex;
+            justify-content: center; /* Center the chart */
+            align-items: center; /* Center vertically */
+            margin-top: 20px; /* Optional margin */
+        }
+
+        /* Align the attendance stats to the right */
+        .attendance-stats {
+            display: flex;
+            flex-direction: column; /* Align items vertically */
+            justify-content: center; /* Center vertically */
+            margin-left: 20px; /* Space between chart and stats */
+        }
+    </style>
+</head>
+
+<body class="m-0 p-0 font-sans bg-gray-100 flex h-screen">
+    <div class="flex w-full">
+        <!-- Leftbar -->
+        <%- include('../employee/left-bar') %>
+
+        <!-- Main content for attendance -->
+        <main class="flex-1 p-5 space-y-5">
+            <h1 class="text-2xl font-bold mb-5">Attendance Management</h1>
+
+            <!-- Attendance Overview -->
+            <div class="attendance-card flex items-center space-x-5"> <!-- Flex container for chart and stats -->
+                <div id="attendanceChartContainer">
+                    <canvas id="attendanceChart" width="200" height="200"></canvas> <!-- Increased size -->
+                </div>
+
+                <div class="attendance-stats">
+                    <p><strong>Present Days:</strong> 22</p>
+                    <p><strong>Leave Days:</strong> 2</p>
+                </div>
+            </div>
+
+            <!-- Attendance Records -->
+            <div class="attendance-card space-y-5">
+                <h3 class="text-lg font-bold">Attendance Records</h3>
+
+                <table class="attendance-table w-full text-left">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceRecords">
+                        <tr>
+                            <td>01-Oct-2024</td>
+                            <td>Present</td>
+                        </tr>
+                        <tr>
+                            <td>02-Oct-2024</td>
+                            <td>Present</td>
+                        </tr>
+                        <tr>
+                            <td>03-Oct-2024</td>
+                            <td class="leave-status">Leave</td> <!-- Marking leave with red color -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- Rightbar -->
+        <%- include('../employee/right-bar') %>
+    </div>
+
+    <script>
+        // Initialize Chart.js
+        const ctx = document.getElementById('attendanceChart').getContext('2d');
+        const attendanceChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Present', 'Leave'],
+                datasets: [{
+                    label: 'Attendance Status',
+                    data: [22, 2], // Initial data
+                    backgroundColor: ['#4f46e5', '#f87171'],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        });
+    </script>
+</body>
+
+</html>

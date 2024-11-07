@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <title>Admin Dashboard - Performance Report</title>
+</head>
+<body class="bg-background text-primary-foreground dark:bg-primary dark:text-primary-foreground">
+    <div class="container flex">
+        <!-- Sidebar -->
+        <%- include('../admin-left-bar') %>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-6">
+            <h2 class="text-2xl font-semibold mb-4">Employee Performance Reports</h2>
+            <div class="mb-4">
+                <label for="report-month" class="block text-sm font-medium">Select Month:</label>
+                <select id="report-month" class="mt-1 border border-gray-300 rounded-md p-2">
+                    <option value="">--Select Month--</option>
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                </select>
+                <button class="mt-2 bg-indigo-600 text-white rounded-lg px-4 py-2 hover:bg-indigo-700">
+                    Show Reports
+                </button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white border border-gray-200">
+                    <thead>
+                        <tr class="bg-gray-200 text-left">
+                            <th class="py-2 px-4 border-b">Employee Name</th>
+                            <th class="py-2 px-4 border-b">Tasks Completed</th>
+                            <th class="py-2 px-4 border-b">Overall Performance Rating</th>
+                            <th class="py-2 px-4 border-b">Projects Involved</th>
+                            <th class="py-2 px-4 border-b">Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Example Row 1 -->
+                        <tr class="hover:bg-gray-100">
+                            <td class="py-2 px-4 border-b">John Doe</td>
+                            <td class="py-2 px-4 border-b">15</td>
+                            <td class="py-2 px-4 border-b">4.5/5</td>
+                            <td class="py-2 px-4 border-b">Project A, Project B</td>
+                            <td class="py-2 px-4 border-b">Consistently meets deadlines.</td>
+                        </tr>
+                        <!-- Example Row 2 -->
+                        <tr class="hover:bg-gray-100">
+                            <td class="py-2 px-4 border-b">Jane Smith</td>
+                            <td class="py-2 px-4 border-b">12</td>
+                            <td class="py-2 px-4 border-b">4.2/5</td>
+                            <td class="py-2 px-4 border-b">Project C, Project D</td>
+                            <td class="py-2 px-4 border-b">Needs to improve communication.</td>
+                        </tr>
+                        <!-- Example Row 3 -->
+                        <tr class="hover:bg-gray-100">
+                            <td class="py-2 px-4 border-b">Mike Johnson</td>
+                            <td class="py-2 px-4 border-b">20</td>
+                            <td class="py-2 px-4 border-b">4.8/5</td>
+                            <td class="py-2 px-4 border-b">Project E, Project F</td>
+                            <td class="py-2 px-4 border-b">Excellent team player.</td>
+                        </tr>
+                        <!-- Add more rows as necessary -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <%- include('../footer') %>
+</body>
+</html>

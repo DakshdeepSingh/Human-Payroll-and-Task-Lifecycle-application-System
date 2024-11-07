@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard - Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-p2SRgsDW1JbF2GsvHDv5z5fCrDsfX+xJeR02LfZwP4KjbJ4CpZ5p1azSfzM11tEJv54pN6p6LEIoMRkgSpXahQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Set a fixed height for the main content and enable scrolling */
+        main {
+            height: calc(100vh - 1rem); /* Subtracting top and bottom margin */
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+    </style>
+</head>
+
+<body class="m-0 p-0 font-sans bg-gray-100 flex h-screen">
+    <div class="flex w-full">
+        <!-- Leftbar -->
+        <%- include('../employee/left-bar') %>
+
+        <!-- Main content for settings -->
+        <main class="flex-1 p-5 space-y-5">
+            <h1 class="text-2xl font-bold mb-5">Settings</h1>
+
+            <!-- Account Settings -->
+            <section class="bg-white p-5 rounded-lg shadow-lg">
+                <h2 class="text-lg font-semibold">Account Settings</h2>
+                <form id="accountSettingsForm" action="/settings/update" method="POST">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="username" class="block text-sm">Username</label>
+                            <input type="text" id="username" name="username" class="w-full border border-gray-300 p-2 rounded" value="johndoe" required>
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm">Email</label>
+                            <input type="email" id="email" name="email" class="w-full border border-gray-300 p-2 rounded" value="john@example.com" required>
+                        </div>
+                        <div>
+                            <label for="password" class="block text-sm">New Password</label>
+                            <input type="password" id="password" name="password" class="w-full border border-gray-300 p-2 rounded" placeholder="Leave blank to keep current password">
+                        </div>
+                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Save Changes</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Notification Preferences -->
+            <section class="bg-white p-5 rounded-lg shadow-lg">
+                <h2 class="text-lg font-semibold">Notification Preferences</h2>
+                <div class="space-y-2">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="emailNotifications" class="mr-2" checked>
+                        <label for="emailNotifications">Email Notifications</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="smsNotifications" class="mr-2">
+                        <label for="smsNotifications">SMS Notifications</label>
+                    </div>
+                    <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Update Preferences</button>
+                </div>
+            </section>
+
+            <!-- Privacy Settings -->
+            <section class="bg-white p-5 rounded-lg shadow-lg">
+                <h2 class="text-lg font-semibold">Privacy Settings</h2>
+                <div class="space-y-2">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="dataSharing" class="mr-2" checked>
+                        <label for="dataSharing">Allow data sharing with third parties</label>
+                    </div>
+                    <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Save Privacy Settings</button>
+                </div>
+            </section>
+
+            <!-- Support Section -->
+            <section class="bg-white p-5 rounded-lg shadow-lg">
+                <h2 class="text-lg font-semibold">Support</h2>
+                <p class="text-sm text-gray-600">Need help? Contact our support team:</p>
+                <form id="supportForm" action="/support/request" method="POST">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="issue" class="block text-sm">Describe your issue</label>
+                            <textarea id="issue" name="issue" class="w-full border border-gray-300 p-2 rounded" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Submit Support Request</button>
+                    </div>
+                </form>
+                <p class="mt-2 text-sm">You can also reach us at: <a href="mailto:support@example.com" class="text-indigo-600">support@example.com</a></p>
+            </section>
+        </main>
+
+        <!-- Rightbar -->
+        <%- include('../employee/right-bar') %>
+    </div>
+
+    <script>
+        // You can add any relevant scripts here if needed.
+    </script>
+</body>
+
+</html>
