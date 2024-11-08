@@ -13,9 +13,167 @@
         <%- include('../admin-left-bar') %>
 
         <!-- Main Content -->
-        <div class="flex-1 p-6">
-                    
+        <div class="flex-1 p-6 space-y-8">
+            <!-- Task Assignment Form -->
+            <section class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-3xl font-bold mb-4 text-gray-800">Assign a New Task</h2>
+                <form id="taskForm" class="space-y-4" onsubmit="addTask(event)">
+                    <div>
+                        <label class="block text-lg font-semibold text-gray-800">Select User</label>
+                        <select id="userSelect" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" onchange="displayUserDetails()" required>
+                            <option value="">-- Select User --</option>
+                            <!-- Users will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-lg font-semibold text-gray-800">User ID</label>
+                        <input type="text" id="userId" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-gray-500 bg-gray-100" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-lg font-semibold text-gray-800">Designation</label>
+                        <input type="text" id="userDesignation" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-gray-500 bg-gray-100" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-lg font-semibold text-gray-800">Task Title</label>
+                        <input type="text" id="taskTitle" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Enter task title" required>
+                    </div>
+                    <div>
+                        <label class="block text-lg font-semibold text-gray-800">Task Description</label>
+                        <textarea id="taskDescription" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" rows="3" placeholder="Describe the task..." required></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-lg font-semibold text-gray-800">Due Date</label>
+                        <input type="date" id="taskDueDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                    </div>
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-500">Assign Task</button>
+                </form>
+            </section>
+
+            <!-- Task Status Table -->
+            <section class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-3xl font-bold mb-4 text-gray-800">Current Task Status</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-gray-200" id="taskTable">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800 border-b">User</th>
+                                <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800 border-b">User ID</th>
+                                <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800 border-b">Designation</th>
+                                <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800 border-b">Task Title</th>
+                                <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800 border-b">Description</th>
+                                <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800 border-b">Due Date</th>
+                                <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800 border-b">Status</th>
+                                <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800 border-b">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="taskList">
+                            <!-- Task rows go here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
     </div>
+
     <%- include('../footer') %>
+
+    <script>
+        // Sample data for users
+        const users = [
+            { id: "U001", name: "John Doe", designation: "Developer" },
+            { id: "U002", name: "Jane Smith", designation: "Designer" },
+            { id: "U003", name: "Mike Johnson", designation: "Product Manager" }
+        ];
+
+        let tasks = [];
+        let editIndex = -1;
+
+        // Populate user dropdown
+        const userSelect = document.getElementById("userSelect");
+        users.forEach((user) => {
+            const option = document.createElement("option");
+            option.value = user.id;
+            option.textContent = user.name;
+            option.dataset.designation = user.designation;
+            userSelect.appendChild(option);
+        });
+
+        // Display user details when selected
+        function displayUserDetails() {
+            const selectedUser = users.find(user => user.id === userSelect.value);
+            if (selectedUser) {
+                document.getElementById("userId").value = selectedUser.id;
+                document.getElementById("userDesignation").value = selectedUser.designation;
+            } else {
+                document.getElementById("userId").value = "";
+                document.getElementById("userDesignation").value = "";
+            }
+        }
+
+        // Function to add a new task or edit an existing one
+        function addTask(event) {
+            event.preventDefault();
+
+            const user = userSelect.options[userSelect.selectedIndex].text;
+            const userId = document.getElementById("userId").value;
+            const designation = document.getElementById("userDesignation").value;
+            const title = document.getElementById("taskTitle").value;
+            const description = document.getElementById("taskDescription").value;
+            const dueDate = document.getElementById("taskDueDate").value;
+
+            if (editIndex >= 0) {
+                tasks[editIndex] = { user, userId, designation, title, description, dueDate, status: "In Progress" };
+                editIndex = -1;
+            } else {
+                tasks.push({ user, userId, designation, title, description, dueDate, status: "In Progress" });
+            }
+
+            document.getElementById("taskForm").reset();
+            renderTasks();
+        }
+
+        // Function to render the task list
+        function renderTasks() {
+            const taskList = document.getElementById("taskList");
+            taskList.innerHTML = "";
+            tasks.forEach((task, index) => {
+                taskList.innerHTML += `
+                    <tr>
+                        <td class="px-4 py-2 border-b">${task.user}</td>
+                        <td class="px-4 py-2 border-b">${task.userId}</td>
+                        <td class="px-4 py-2 border-b">${task.designation}</td>
+                        <td class="px-4 py-2 border-b">${task.title}</td>
+                        <td class="px-4 py-2 border-b">${task.description}</td>
+                        <td class="px-4 py-2 border-b">${task.dueDate}</td>
+                        <td class="px-4 py-2 border-b text-green-600">${task.status}</td>
+                        <td class="px-4 py-2 border-b">
+                            <button class="bg-yellow-500 text-white px-2 py-1 rounded-md text-xs" onclick="editTask(${index})">Edit</button>
+                            <button class="bg-red-500 text-white px-2 py-1 rounded-md text-xs" onclick="deleteTask(${index})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Function to edit a task
+        function editTask(index) {
+            const task = tasks[index];
+            userSelect.value = task.userId;
+            displayUserDetails();
+            document.getElementById("taskTitle").value = task.title;
+            document.getElementById("taskDescription").value = task.description;
+            document.getElementById("taskDueDate").value = task.dueDate;
+            editIndex = index;
+        }
+
+        // Function to delete a task
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            renderTasks();
+        }
+
+        // Initial render
+        renderTasks();
+    </script>
 </body>
 </html>
