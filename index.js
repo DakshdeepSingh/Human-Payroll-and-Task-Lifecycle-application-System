@@ -11,13 +11,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 // Serve static files
-app.use(express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 
 // MARK: - Database Content
 const employeeModel = require('./models/employeeSchema');
 const leaveRequestModel = require('./models/leaveRequestSchema');
-const taskModel = require('./models/taskSchema'); // Model to be implemented with task.ejs
+const taskModel = require('./models/taskSchema');
 
 const employeeController = require('./controllers/employeeController');
 const leaveRequestController = require('./controllers/leaveRequestController');
@@ -69,13 +69,41 @@ app.get("/admin/employee-add", (req, res) => {
   res.render("admin-dashboard/employee-add");
 });
 app.post('/employee-add', upload.single('photo-upload'), employeeController.addEmployee);
-app.get("/admin/IDCard", (req, res) => {
-  res.render("admin-dashboard/IDCard");
+app.get("/admin/IDCard", async (req, res) => {
+  try {
+      const employeeRequests = await employeeModel.find({});
+      res.render("admin-dashboard/IDCard", {
+        employees: employeeRequests
+      });
+  } catch (err) {
+      console.error("Error fetching employee data:", err);
+      res.status(500).send("Error retrieving employee information. Please try again later.");
+  }
 });
-
-app.get("/admin/admin-task", (req, res) => {
-  res.render("admin-dashboard/admin-task");
+app.get("/admin/admin-task", async (req, res) => {
+  try {
+      const employeeRequests = await employeeModel.find({}, 'userId firstName lastName designation');
+      const taskRequests = await taskModel.find({});
+      res.render("admin-dashboard/admin-task", {
+        employees: employeeRequests,
+        tasks: taskRequests
+      });
+  } catch (err) {
+      console.error("Error fetching task data:", err);
+      res.status(500).send("Error retrieving task information. Please try again later.");
+  }
 });
+app.get('/admin/tasks', async (req, res) => {
+  try {
+      const tasks = await taskModel.find({});
+      res.json(tasks);
+  } catch (err) {
+      console.error("Error fetching tasks:", err);
+      res.status(500).send("Internal Server Error");
+  }
+});
+app.post('/admin/add-task', taskController.taskAssignment);
+app.delete('/admin/delete-task', taskController.taskDelete);
 
 // MARK: - Employee APIs
 app.get("/employee-dashboard", (req, res) => {
@@ -89,9 +117,20 @@ app.get("/employee-dashboard/:id/:name", (req, res) => {
   res.send(`employee id: ${req.params.id} employee name: ${req.params.name}`);
 });
 
-app.get("/employee-dashboard/task", (req, res) => {
-  res.render("employee-dashboard/task");
+app.get("/employee-dashboard/task", async (req, res) => {
+  try {
+    const id = 102;
+    const taskRequests = await taskModel.find({userId: id});
+    res.render("employee-dashboard/task", {
+      tasks: taskRequests
+    });
+  } catch (err) {
+    console.error("Error fetching tasks: ", err);
+    res.status(500).send("Internal Server Error");
+  }
 });
+app.post('/admin/toggle-task-status', taskController.taskToggleStatus);
+
 app.get("/employee-dashboard/attendance", (req, res) => {
   res.render("employee-dashboard/attendance");
 });
@@ -111,7 +150,7 @@ app.get("/employee-dashboard/leaveRequest", async (req, res) => {
           leaves: leaveRequests
       });
   } catch (err) {
-      console.error("Error fetching leave requests:", err);
+      console.error("Error fetching leave requests: ", err);
       res.status(500).send("Internal Server Error");
   }
 });

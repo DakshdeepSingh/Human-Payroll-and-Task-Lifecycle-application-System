@@ -32,43 +32,27 @@
             <!-- Employee ID Cards -->
             <h3 class="font-bold text-xl mb-4">Employee ID Cards</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Employee ID Card Example -->
-                <div class="bg-white shadow-md rounded-lg p-4">
-                    <h4 class="font-bold text-lg">Employee ID Card</h4>
-                    <div class="flex items-center">
-                        <img src="path_to_employee_image.jpg" alt="Employee Image" class="w-24 h-24 rounded-full mr-4">
-                        <div>
-                            <p><strong>Name:</strong> John Doe</p>
-                            <p><strong>Position:</strong> Software Engineer</p>
-                            <p><strong>ID:</strong> E12345</p>
+                <% employees.forEach(function(employeeRequest) { %>
+                    <div class="bg-white shadow-md rounded-lg p-4">
+                        <div class="flex items-center">
+                            <img src="<%= '/uploads/' + employeeRequest.userId + '.jpeg' %>"
+                            alt="Employee Image"
+                            class="w-24 h-24 rounded-full mr-4"
+                            onerror="this.onerror=null; this.src=this.src.replace('.jpeg', '.jpg');">
+                            <div>
+                                <p><strong>Name:</strong>
+                                    <%= employeeRequest.firstName + " " + employeeRequest.lastName %>
+                                </p>
+                                <p><strong>Position:</strong>
+                                    <%= employeeRequest.designation %>
+                                </p>
+                                <p><strong>ID:</strong>
+                                    <%= employeeRequest.userId %>
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Add more employee ID cards as necessary -->
-                <div class="bg-white shadow-md rounded-lg p-4">
-                    <h4 class="font-bold text-lg">Employee ID Card</h4>
-                    <div class="flex items-center">
-                        <img src="path_to_employee_image2.jpg" alt="Employee Image" class="w-24 h-24 rounded-full mr-4">
-                        <div>
-                            <p><strong>Name:</strong> Jane Smith</p>
-                            <p><strong>Position:</strong> Product Manager</p>
-                            <p><strong>ID:</strong> E12346</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Add more employee ID cards as necessary -->
-                <div class="bg-white shadow-md rounded-lg p-4">
-                    <h4 class="font-bold text-lg">Employee ID Card</h4>
-                    <div class="flex items-center">
-                        <img src="path_to_employee_image3.jpg" alt="Employee Image" class="w-24 h-24 rounded-full mr-4">
-                        <div>
-                            <p><strong>Name:</strong> Mike Johnson</p>
-                            <p><strong>Position:</strong> UX Designer</p>
-                            <p><strong>ID:</strong> E12347</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Add more employee ID cards as necessary -->
+                <% }); %>
             </div>
         </div>
     </div>

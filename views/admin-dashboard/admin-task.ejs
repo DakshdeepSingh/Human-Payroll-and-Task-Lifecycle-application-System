@@ -22,7 +22,12 @@
                         <label class="block text-lg font-semibold text-gray-800">Select User</label>
                         <select id="userSelect" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" onchange="displayUserDetails()" required>
                             <option value="">-- Select User --</option>
-                            <!-- Users will be populated dynamically -->
+                            <% employees.forEach(function(employeeRecord) { %>
+                                <option
+                                    value="<%= employeeRecord.userId %>"
+                                    data-designation="<%= employeeRecord.designation %>"
+                                ><%= employeeRecord.firstName + " " + employeeRecord.lastName %></option>
+                            <% }); %>
                         </select>
                     </div>
                     <div>
@@ -78,31 +83,17 @@
     <%- include('../footer') %>
 
     <script>
-        // Sample data for users
-        const users = [
-            { id: "U001", name: "John Doe", designation: "Developer" },
-            { id: "U002", name: "Jane Smith", designation: "Designer" },
-            { id: "U003", name: "Mike Johnson", designation: "Product Manager" }
-        ];
+        // Store employee data passed from server
+        const employees = <%- JSON.stringify(employees) %>;
 
-        let tasks = [];
-        let editIndex = -1;
-
-        // Populate user dropdown
-        const userSelect = document.getElementById("userSelect");
-        users.forEach((user) => {
-            const option = document.createElement("option");
-            option.value = user.id;
-            option.textContent = user.name;
-            option.dataset.designation = user.designation;
-            userSelect.appendChild(option);
-        });
+        let tasks = <%- JSON.stringify(tasks) %>;
 
         // Display user details when selected
         function displayUserDetails() {
-            const selectedUser = users.find(user => user.id === userSelect.value);
+            const selectedUserId = document.getElementById("userSelect").value;
+            const selectedUser = employees.find(user => user.userId == selectedUserId);
             if (selectedUser) {
-                document.getElementById("userId").value = selectedUser.id;
+                document.getElementById("userId").value = selectedUser.userId;
                 document.getElementById("userDesignation").value = selectedUser.designation;
             } else {
                 document.getElementById("userId").value = "";
@@ -110,66 +101,112 @@
             }
         }
 
-        // Function to add a new task or edit an existing one
-        function addTask(event) {
+        // Function to add a new task
+        async function addTask(event) {
             event.preventDefault();
-
-            const user = userSelect.options[userSelect.selectedIndex].text;
+            
+            const userName = userSelect.options[userSelect.selectedIndex].text;
             const userId = document.getElementById("userId").value;
             const designation = document.getElementById("userDesignation").value;
             const title = document.getElementById("taskTitle").value;
             const description = document.getElementById("taskDescription").value;
-            const dueDate = document.getElementById("taskDueDate").value;
+            const dueDate = new Date(document.getElementById("taskDueDate").value).toISOString().split('T')[0];
+            const assignedDate = new Date().toISOString().split("T")[0]; // Today's date as assigned date
 
-            if (editIndex >= 0) {
-                tasks[editIndex] = { user, userId, designation, title, description, dueDate, status: "In Progress" };
-                editIndex = -1;
-            } else {
-                tasks.push({ user, userId, designation, title, description, dueDate, status: "In Progress" });
+            // Prepare the task data
+            const task = {
+                name: userName,
+                userId: parseInt(userId),
+                designation,
+                title,
+                description,
+                assignedDate,
+                dueDate,
+                status: false // Initialize as "In Progress"
+            };
+
+            try {
+                // Send POST request to the server
+                const response = await fetch('/admin/add-task', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(task)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert(result.message);
+                    renderTasks();
+                    document.getElementById("taskForm").reset();
+                } else {
+                    alert("Failed to assign task. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error assigning task:", error);
+                alert("An error occurred. Please try again.");
             }
-
-            document.getElementById("taskForm").reset();
-            renderTasks();
         }
 
-        // Function to render the task list
-        function renderTasks() {
-            const taskList = document.getElementById("taskList");
-            taskList.innerHTML = "";
-            tasks.forEach((task, index) => {
-                taskList.innerHTML += `
-                    <tr>
-                        <td class="px-4 py-2 border-b">${task.user}</td>
-                        <td class="px-4 py-2 border-b">${task.userId}</td>
-                        <td class="px-4 py-2 border-b">${task.designation}</td>
-                        <td class="px-4 py-2 border-b">${task.title}</td>
-                        <td class="px-4 py-2 border-b">${task.description}</td>
-                        <td class="px-4 py-2 border-b">${task.dueDate}</td>
-                        <td class="px-4 py-2 border-b text-green-600">${task.status}</td>
-                        <td class="px-4 py-2 border-b">
-                            <button class="bg-yellow-500 text-white px-2 py-1 rounded-md text-xs" onclick="editTask(${index})">Edit</button>
-                            <button class="bg-red-500 text-white px-2 py-1 rounded-md text-xs" onclick="deleteTask(${index})">Delete</button>
-                        </td>
-                    </tr>
-                `;
-            });
+        // Render tasks in the task table
+        // Function to render tasks
+        async function renderTasks() {
+            try {
+                const response = await fetch('/admin/tasks');
+                const taskList = await response.json();
+                
+                const taskTableBody = document.getElementById("taskList");
+                taskTableBody.innerHTML = "";
+
+                // If no tasks, show a message else print tasks
+                if (taskList.length === 0) {
+                    taskTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="8" class="px-4 py-2 text-center text-lg text-gray-500">No Tasks Assigned</td>
+                        </tr>
+                    `;
+                } else { taskList.forEach((task, index) => {
+                    taskTableBody.innerHTML += `
+                        <tr>
+                            <td class="px-4 py-2 border-b">${task.name}</td>
+                            <td class="px-4 py-2 border-b">${task.userId}</td>
+                            <td class="px-4 py-2 border-b">${task.designation}</td>
+                            <td class="px-4 py-2 border-b">${task.title}</td>
+                            <td class="px-4 py-2 border-b">${task.description}</td>
+                            <td class="px-4 py-2 border-b">${new Date(task.dueDate).toISOString().split('T')[0]}</td>
+                            <td class="px-4 py-2 border-b">${task.status ? "Completed" : "In Progress"}</td>
+                            <td class="px-4 py-2 border-b">
+                                <button class="bg-yellow-500 text-white px-2 py-1 rounded-md text-xs" onclick="editTask(${index})">Edit</button>
+                                <button class="bg-red-500 text-white px-2 py-1 rounded-md text-xs" onclick="deleteTask(${task.taskId})">Delete</button>
+                            </td>
+                        </tr>
+                        `;
+                    });
+                }
+            } catch (error) {
+                console.error("Error loading tasks:", error);
+            }
         }
 
-        // Function to edit a task
-        function editTask(index) {
-            const task = tasks[index];
-            userSelect.value = task.userId;
-            displayUserDetails();
-            document.getElementById("taskTitle").value = task.title;
-            document.getElementById("taskDescription").value = task.description;
-            document.getElementById("taskDueDate").value = task.dueDate;
-            editIndex = index;
-        }
+        async function deleteTask(taskId) {
+            try {
+                const response = await fetch('/admin/delete-task', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ taskId })
+                });
 
-        // Function to delete a task
-        function deleteTask(index) {
-            tasks.splice(index, 1);
-            renderTasks();
+                if (response.ok) {
+                    renderTasks();
+                } else {
+                    alert('Failed to delete task. Please try again later.');
+                }
+            } catch (err) {
+                console.error("Error deleting tasks:", error);
+            }
         }
 
         // Initial render

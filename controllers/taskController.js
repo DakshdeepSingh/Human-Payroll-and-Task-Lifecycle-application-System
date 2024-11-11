@@ -3,22 +3,27 @@ const taskSchema = require('../models/taskSchema');
 
 const taskAssignment = async (req, res) => {
     try {
-        const inputData = {
-            userId: 101,
-            taskId: req.body.taskId,
-            task: req.body.task,
-            assignedDate: req.body.assignedDate,
-            dueDate: req.body.dueDate,
-            status: req.body.status
-        };
-        
-        console.log(req.body);
+        const { name, userId, designation, title, description, assignedDate, dueDate, status } = req.body;
 
-        if (!inputData.userId || !inputData.taskId || !inputData.task || !inputData.assignedDate || !inputData.dueDate || !inputData.status) {
-            return res.status(400).send("Enter All Data");
+        if (!name || !userId || !designation || !title || !description || !assignedDate || !dueDate) {
+            return res.status(400).send("All fields are required");
         }
-        
-        // Create new task record
+
+        const lastTask = await taskSchema.findOne().sort({ taskId: -1 });
+        const newTaskId = lastTask ? lastTask.taskId + 1 : 1;
+
+        const inputData = {
+            name,
+            userId,
+            taskId: newTaskId,
+            designation,
+            title,
+            description,
+            assignedDate,
+            dueDate,
+            status: status || false // Default to false if status is not provided
+        };
+
         const data = await taskSchema.create(inputData);
         res.status(201).json({
             status: 201,
@@ -26,32 +31,26 @@ const taskAssignment = async (req, res) => {
             data: data
         });
     } catch (err) {
-        console.error(err);
+        console.error("Error assigning task:", err);
         res.status(500).send("Internal Server Error");
     }
-}
+};
 
 const taskToggleStatus = async (req, res) => {
     try {
         const { taskId } = req.body;
 
-        // Validate input
         if (!taskId) {
             return res.status(400).send("Task ID is required");
         }
 
-        // Find the task by taskId
         const task = await taskSchema.findOne({ taskId });
 
-        // Check if the task exists
         if (!task) {
             return res.status(404).send("Task not found");
         }
 
-        // Toggle the status
         task.status = !task.status;
-
-        // Save the updated task
         const updatedTask = await task.save();
 
         res.status(200).json({
@@ -60,10 +59,10 @@ const taskToggleStatus = async (req, res) => {
             data: updatedTask
         });
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(500).send("Internal Server Error");
     }
-}
+};
 
 const taskDelete = async (req, res) => {
     try {

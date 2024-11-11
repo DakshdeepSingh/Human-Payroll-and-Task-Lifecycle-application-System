@@ -10,7 +10,19 @@ const taskSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    task: {
+    name: {
+        type: String,
+        required: true
+    },
+    designation: {
+        type: String,
+        required: true
+    },
+    title: {
+        type: String,
+        required: true
+    },
+    description: {
         type: String,
         required: true
     },
