@@ -59,7 +59,7 @@
                 <h2 class="text-2xl font-extrabold mb-6 text-indigo-800 bg-gradient-to-r from-[#7367f0] via-[#abc4ff] to-[#e0e7ff] text-transparent bg-clip-text shadow-lg p-3 rounded-lg">
                     Add New Employee
                 </h2>
-                <form class="grid grid-cols-1 sm:grid-cols-2 gap-4" action="/employee-add" method="post" enctype="multipart/form-data">
+                <form class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="employeeAddForm" action="/employee-add" method="post" enctype="multipart/form-data">
                     <div class="mb-4">
                         <label for="firstName" class="block text-sm font-medium">First Name</label>
                         <input type="text" id="firstName" name="firstName" placeholder="John" class="w-full px-3 py-2 rounded-lg input-field focus:outline-none focus:ring-2 focus:ring-primary" />
@@ -116,6 +116,54 @@
             </div>
         </div>
     </div>
+    <script>
+        async function addEmployee(event) {
+            event.preventDefault(); // Prevent the default form submission.
+
+            const formData = new FormData();
+            formData.append('firstName', document.getElementById('firstName').value);
+            formData.append('lastName', document.getElementById('lastName').value);
+            formData.append('address', document.getElementById('address').value);
+            formData.append('email', document.getElementById('email').value);
+            formData.append('age', document.getElementById('age').value);
+            formData.append('salary', document.getElementById('salary').value);
+            formData.append('designation', document.getElementById('designation').value);
+            formData.append('passportNumber', document.getElementById('passportNumber').value);
+            formData.append('nominee', document.getElementById('nominee').value);
+            formData.append('userId', document.getElementById('userId').value);
+            formData.append('password', document.getElementById('password').value);
+            
+            // Append the image file to the formData object
+            const photoUpload = document.getElementById('photo-upload').files[0];
+            if (photoUpload) {
+                formData.append('photo-upload', photoUpload);
+            }
+    
+            try {
+                // Send the data to the server
+                const response = await fetch('/employee-add', {
+                    method: 'POST',
+                    body: formData // Send formData as the request body
+                });
+    
+                // Handle the response
+                if (response.ok) {
+                    console.log("Employee Added");
+                    alert("Employee added successfully!");
+                    document.getElementById('employeeAddForm').reset();
+                } else {
+                    const errorMessage = await response.json();
+                    alert(errorMessage.message);
+                }
+            } catch (error) {
+                console.error("Error adding employee:", error);
+                alert("An error occurred while adding the employee.");
+            }
+        }
+    
+        // Attach the addEmployee function to the form submit event
+        document.querySelector('form').addEventListener('submit', addEmployee);
+    </script>
 </body>
 </html>
 <%- include('../footer') %>
