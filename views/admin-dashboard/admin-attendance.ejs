@@ -27,35 +27,48 @@
                 <table class="min-w-full bg-white border border-gray-200">
                     <thead>
                         <tr class="bg-gray-200 text-left">
-                            <th class="py-2 px-4 border-b">Employee Name</th>
-                            <th class="py-2 px-4 border-b">Date</th>
-                            <th class="py-2 px-4 border-b">Status</th>
+                            <th class="py-2 px-4 border-b">ID</th>
+                            <th class="py-2 px-4 border-b">Name</th>
+                            <th class="py-2 px-4 border-b">Date (MM/DD/YYYY)</th>
                             <th class="py-2 px-4 border-b">Leave Type</th>
+                            <th class="py-2 px-4 border-b">Reason</th>
+                            <th class="py-2 px-4 border-b">Status</th>
+                            <th class="py-2 px-4 border-b"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Example Row 1 -->
-                        <tr class="hover:bg-gray-100">
-                            <td class="py-2 px-4 border-b">John Doe</td>
-                            <td class="py-2 px-4 border-b">2024-10-13</td>
-                            <td class="py-2 px-4 border-b">Present</td>
-                            <td class="py-2 px-4 border-b">N/A</td>
-                        </tr>
-                        <!-- Example Row 2 -->
-                        <tr class="hover:bg-gray-100">
-                            <td class="py-2 px-4 border-b">Jane Smith</td>
-                            <td class="py-2 px-4 border-b">2024-10-13</td>
-                            <td class="py-2 px-4 border-b">Absent</td>
-                            <td class="py-2 px-4 border-b">N/A</td>
-                        </tr>
-                        <!-- Example Row 3 -->
-                        <tr class="hover:bg-gray-100">
-                            <td class="py-2 px-4 border-b">Mike Johnson</td>
-                            <td class="py-2 px-4 border-b">2024-10-13</td>
-                            <td class="py-2 px-4 border-b">Leave</td>
-                            <td class="py-2 px-4 border-b">Annual Leave</td>
-                        </tr>
-                        <!-- Add more rows as necessary -->
+                        <% leaveRequests.forEach(function(leaveRequest) { %>
+                            <tr data-id="<%= leaveRequest._id %>" class="hover:bg-gray-100">
+                                <td class="py-2 px-4 border-b"><%= leaveRequest.userId %></td>
+                                <td class="py-2 px-4 border-b">
+                                    <%= (employees.find(emp => emp.userId === leaveRequest.userId) || {}).firstName || 'Unknown' %> 
+                                    <%= (employees.find(emp => emp.userId === leaveRequest.userId) || {}).lastName || 'Unknown' %>
+                                </td>
+                                <td class="py-2 px-4 border-b">
+                                    <%= leaveRequest.startDate.toLocaleDateString() %> - <%= leaveRequest.endDate.toLocaleDateString() %>
+                                </td>
+                                <td class="py-2 px-4 border-b"><%= leaveRequest.leaveType %></td>
+                                <td class="py-2 px-4 border-b"><%= leaveRequest.reason %></td>
+                                <td class="py-2 px-4 border-b"><%= leaveRequest.status || 'Pending' %></td>
+                                <td class="py-2 px-4 border-b">
+                                    <button data-id="<%= leaveRequest.userId %>" class="accept-btn bg-green-500 text-white rounded-lg px-4 py-2 hover:bg-green-600 flex justify-center items-center mb-1 <%= leaveRequest.status === 'Pending' ? '' : 'hidden' %>">
+                                        <span class="material-symbols-outlined">
+                                            check
+                                        </span>
+                                    </button>
+                                    <button data-id="<%= leaveRequest.userId %>" class="reject-btn bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600 flex justify-center items-center <%= leaveRequest.status === 'Pending' ? '' : 'hidden' %>">
+                                        <span class="material-symbols-outlined">
+                                            close
+                                        </span>
+                                    </button>
+                                    <button data-id="<%= leaveRequest.userId %>" class="undo-btn bg-yellow-500 text-white rounded-lg px-4 py-2 hover:bg-yellow-600 flex justify-center items-center <%= leaveRequest.status === 'Approved' || leaveRequest.status === 'Rejected' ? '' : 'hidden' %>">
+                                        <span class="material-symbols-outlined">
+                                            undo
+                                        </span>
+                                    </button>
+                                </td>
+                            </tr>
+                        <% }); %>
                     </tbody>
                 </table>
             </div>
@@ -98,5 +111,100 @@
     </div>
     
 </body>
+<script>
+    // Function to send AJAX request to update the leave status
+    async function updateLeaveStatus(id, status) {
+        try {
+            const response = await fetch('/admin/update-leave-status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id, status }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                const tableBody = document.querySelector('tbody');
+                const row = document.querySelector(`tr[data-id="${id}"]`);
+                const statusCell = row.querySelector('td:nth-child(6)'); // Update this selector if needed
+                const acceptBtn = row.querySelector('.accept-btn');
+                const rejectBtn = row.querySelector('.reject-btn');
+                const undoBtn = row.querySelector('.undo-btn');
+
+                // Update the status cell text
+                statusCell.textContent = status;
+
+                // Toggle button visibility
+                if (status === 'Approved' || status === 'Rejected') {
+                    acceptBtn?.classList.add('hidden');
+                    rejectBtn?.classList.add('hidden');
+                    undoBtn?.classList.remove('hidden');
+                } else if (status === 'Pending') {
+                    acceptBtn?.classList.remove('hidden');
+                    rejectBtn?.classList.remove('hidden');
+                    undoBtn?.classList.add('hidden');
+                }
+
+                // Rearrange rows based on status
+                if (status === 'Pending') {
+                    // Move the row to the top of the table
+                    tableBody.prepend(row);
+                } else {
+                    // Move the row to the bottom of the table
+                    tableBody.appendChild(row);
+                }
+            } else {
+                alert(result.error || 'Failed to update status.');
+            }
+        } catch (err) {
+            console.error('Error updating leave status:', err);
+            alert('An error occurred. Please try again.');
+        }
+    }
+
+    // Function to sort rows by status
+    function sortRowsByStatus() {
+        const tableBody = document.querySelector('tbody');
+        const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+        // Sort rows: "Pending" rows first, then others
+        rows.sort((rowA, rowB) => {
+            const statusA = rowA.querySelector('td:nth-child(6)').textContent.trim();
+            const statusB = rowB.querySelector('td:nth-child(6)').textContent.trim();
+
+            if (statusA === 'Pending' && statusB !== 'Pending') {
+                return -1; // rowA comes before rowB
+            } else if (statusA !== 'Pending' && statusB === 'Pending') {
+                return 1; // rowA comes after rowB
+            }
+            return 0; // no change for rows with the same status
+        });
+
+        // Reorder rows in the table body
+        rows.forEach(row => tableBody.appendChild(row));
+    }
+
+    // Call the sorting function on page load
+    document.addEventListener('DOMContentLoaded', sortRowsByStatus);
+
+    // Single event listener for button clicks
+    document.addEventListener('click', (event) => {
+        const target = event.target.closest('button'); // Get the button clicked
+        if (!target) return;
+
+        const row = target.closest('tr'); // Find the parent row
+        const id = row?.dataset.id;
+
+        if (target.classList.contains('accept-btn')) {
+            updateLeaveStatus(id, 'Approved');
+        } else if (target.classList.contains('reject-btn')) {
+            updateLeaveStatus(id, 'Rejected');
+        } else if (target.classList.contains('undo-btn')) {
+            updateLeaveStatus(id, 'Pending');
+        }
+    });
+</script>
 </html>
 <%- include('../footer') %>

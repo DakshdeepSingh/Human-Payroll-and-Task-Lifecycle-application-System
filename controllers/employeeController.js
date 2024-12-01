@@ -1,5 +1,6 @@
 const express = require('express');
 const employee = require('../models/employeeSchema');
+const bcrypt = require('bcrypt');
 
 const addEmployee = async (req, res) => {
     try {
@@ -14,12 +15,12 @@ const addEmployee = async (req, res) => {
             passportNumber: req.body.passportNumber,
             nominee: req.body.nominee,
             userId: req.body.userId,
-            password: req.body.password,
+            password: await bcrypt.hash(req.body.password, 10),
             photo: req.file.filename // Store the uploaded photo's filename
         };
         
         console.log(inputData);
-        if (!inputData.firstName || !inputData.lastName || !inputData.email || !inputData.userId || !req.file) {
+        if (!inputData.firstName || !inputData.lastName || !inputData.email || !inputData.userId || !inputData.password || !req.file) {
             return res.status(400).send("Enter All Data, including a photo");
         }
 

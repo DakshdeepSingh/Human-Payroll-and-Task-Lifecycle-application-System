@@ -68,7 +68,7 @@
                                 <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800 border-b">Description</th>
                                 <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800 border-b">Due Date</th>
                                 <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800 border-b">Status</th>
-                                <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800 border-b">Actions</th>
+                                <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800 border-b"></th>
                             </tr>
                         </thead>
                         <tbody id="taskList">
@@ -166,21 +166,24 @@
                             <td colspan="8" class="px-4 py-2 text-center text-lg text-gray-500">No Tasks Assigned</td>
                         </tr>
                     `;
-                } else { taskList.forEach((task, index) => {
-                    taskTableBody.innerHTML += `
-                        <tr>
-                            <td class="px-4 py-2 border-b">${task.name}</td>
-                            <td class="px-4 py-2 border-b">${task.userId}</td>
-                            <td class="px-4 py-2 border-b">${task.designation}</td>
-                            <td class="px-4 py-2 border-b">${task.title}</td>
-                            <td class="px-4 py-2 border-b">${task.description}</td>
-                            <td class="px-4 py-2 border-b">${new Date(task.dueDate).toISOString().split('T')[0]}</td>
-                            <td class="px-4 py-2 border-b">${task.status ? "Completed" : "In Progress"}</td>
-                            <td class="px-4 py-2 border-b">
-                                <button class="bg-yellow-500 text-white px-2 py-1 rounded-md text-xs" onclick="editTask(${index})">Edit</button>
-                                <button class="bg-red-500 text-white px-2 py-1 rounded-md text-xs" onclick="deleteTask(${task.taskId})">Delete</button>
-                            </td>
-                        </tr>
+                } else {
+                    taskList.forEach((task, index) => {
+                        const taskRowClass = task.status ? 'bg-green-100' : 'bg-gray-100'; // Add background color based on task status
+
+                        taskTableBody.innerHTML += `
+                            <tr class="${taskRowClass}">
+                                <td class="px-4 py-2 border-b">${task.name}</td>
+                                <td class="px-4 py-2 border-b">${task.userId}</td>
+                                <td class="px-4 py-2 border-b">${task.designation}</td>
+                                <td class="px-4 py-2 border-b">${task.title}</td>
+                                <td class="px-4 py-2 border-b">${task.description}</td>
+                                <td class="px-4 py-2 border-b">${new Date(task.dueDate).toISOString().split('T')[0]}</td>
+                                <td class="px-4 py-2 border-b">${task.status ? "Completed" : "In Progress"}</td>
+                                <td class="px-4 py-2 border-b">
+                                    <button class="bg-yellow-500 text-white px-2 py-1 rounded-md text-xs" onclick="editTask(${index})">Edit</button>
+                                    <button class="bg-red-500 text-white px-2 py-1 rounded-md text-xs" onclick="deleteTask(${task.taskId})">Delete</button>
+                                </td>
+                            </tr>
                         `;
                     });
                 }
