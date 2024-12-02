@@ -26,23 +26,37 @@
                     <!-- Employee Tracking Boxes -->
                     <div class="bg-white shadow-md rounded-lg p-6">
                         <h2 class="text-xl font-semibold mb-2">Total Employees</h2>
-                        <p class="text-3xl font-bold">250</p>
+                        <p class="text-3xl font-bold">
+                            <%= employeeCount %>
+                        </p>
                     </div>
                     <div class="bg-white shadow-md rounded-lg p-6">
                         <h2 class="text-xl font-semibold mb-2">Employees on Leave</h2>
-                        <p class="text-3xl font-bold">15</p>
+                        <p class="text-3xl font-bold">
+                            <%= acceptedLeaveCount %>
+                        </p>
                     </div>
-                    <div class="bg-white shadow-md rounded-lg p-6">
+                    <!-- <div class="bg-white shadow-md rounded-lg p-6">
                         <h2 class="text-xl font-semibold mb-2">Average Work Hours</h2>
                         <p class="text-3xl font-bold">8.5 hrs/day</p>
+                    </div> -->
+                    <div class="bg-white shadow-md rounded-lg p-6">
+                        <h2 class="text-xl font-semibold mb-2">New Leave Requests</h2>
+                        <p class="text-3xl font-bold">
+                            <%= leaveCount %>
+                        </p>
+                    </div>
+                    <div class="bg-white shadow-md rounded-lg p-6">
+                        <h2 class="text-xl font-semibold mb-2">Tasks Pending</h2>
+                        <p class="text-3xl font-bold">
+                            <%= tasksPendingCount %>
+                        </p>
                     </div>
                     <div class="bg-white shadow-md rounded-lg p-6">
                         <h2 class="text-xl font-semibold mb-2">Tasks Completed</h2>
-                        <p class="text-3xl font-bold">120</p>
-                    </div>
-                    <div class="bg-white shadow-md rounded-lg p-6">
-                        <h2 class="text-xl font-semibold mb-2">New Employees</h2>
-                        <p class="text-3xl font-bold">5</p>
+                        <p class="text-3xl font-bold">
+                            <%= tasksCompletedCount %>
+                        </p>
                     </div>
                     <div class="bg-white shadow-md rounded-lg p-6">
                         <h2 class="text-xl font-semibold mb-2">Pending Approvals</h2>

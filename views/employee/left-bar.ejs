@@ -30,9 +30,11 @@
         <nav class="mt-5">
 
             <div class="flex flex-col items-center text-center">
-                <img src="profile.png" alt="Employee Profile Picture" class="w-24 h-24 rounded-full mb-2">
-                <h3 class="text-lg font-bold">John Doe</h3>
-                <p class="text-sm text-gray-500">Employee ID: 12345</p>
+                <img src="<%= '/uploads/' + userId + '.jpeg' %>" alt="Employee Profile Picture" class="w-24 h-24 rounded-full mb-2" onerror="this.onerror=null; this.src=this.src.replace('.jpeg', '.jpg');">
+                <h3 class="text-lg font-bold">
+                    <%= username %>
+                </h3>
+                <p class="text-sm text-gray-500">Employee ID: <%= userId %></p>
                 <div class="mb-4"></div> <!-- Added space below Employee ID -->
             </div>
 
@@ -85,7 +87,9 @@
             </nav>
 
             <div class="mt-10 p-2 bg-blue-500 text-white rounded-lg text-center cursor-pointer">
-                Logout
+                <a href="/employee-logout" class="text-white">
+                    Logout
+                </a>
             </div>
         </nav>
     </aside>
