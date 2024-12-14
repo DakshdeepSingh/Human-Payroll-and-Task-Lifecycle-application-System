@@ -112,6 +112,20 @@
     
 </body>
 <script>
+    (async function() {
+    if (performance.navigation.type == 2) {
+        try {
+            const response = await fetch('/admin/check-state', { method: 'GET' });
+
+            if (!response.ok) {
+                window.location.href = "/admin-login";
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    })();
+
     // Function to send AJAX request to update the leave status
     async function updateLeaveStatus(id, status) {
         try {

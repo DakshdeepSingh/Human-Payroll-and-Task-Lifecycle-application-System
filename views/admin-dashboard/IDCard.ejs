@@ -72,5 +72,21 @@
         </div>
     </div>
     <%- include('../footer') %>
+
+    <script>
+        (async function() {
+        if (performance.navigation.type == 2) {
+            try {
+                const response = await fetch('/admin/check-state', { method: 'GET' });
+    
+                if (!response.ok) {
+                    window.location.href = "/admin-login";
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        })();
+    </script>
 </body>
 </html>

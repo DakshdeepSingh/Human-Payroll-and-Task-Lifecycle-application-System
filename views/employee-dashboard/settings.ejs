@@ -29,55 +29,44 @@
         <main class="flex-1 p-5 space-y-5">
             <h1 class="text-2xl font-bold mb-5">Settings</h1>
 
-            <!-- Account Settings -->
             <section class="bg-white p-5 rounded-lg shadow-lg">
                 <h2 class="text-lg font-semibold">Account Settings</h2>
-                <form id="accountSettingsForm" action="/settings/update" method="POST">
+                <form id="accountSettingsForm" action="/employee-dashboard/settings/update-password" method="POST">
                     <div class="space-y-4">
                         <div>
-                            <label for="username" class="block text-sm">Username</label>
-                            <input type="text" id="username" name="username" class="w-full border border-gray-300 p-2 rounded" value="johndoe" required>
+                            <label for="oldPassword" class="block text-sm">Old Password</label>
+                            <input type="password" id="oldPassword" name="oldPassword" class="w-full border border-gray-300 p-2 rounded" required>
                         </div>
                         <div>
-                            <label for="email" class="block text-sm">Email</label>
-                            <input type="email" id="email" name="email" class="w-full border border-gray-300 p-2 rounded" value="john@example.com" required>
+                            <label for="newPassword" class="block text-sm">New Password</label>
+                            <input type="password" id="newPassword" name="newPassword" class="w-full border border-gray-300 p-2 rounded" required>
                         </div>
                         <div>
-                            <label for="password" class="block text-sm">New Password</label>
-                            <input type="password" id="password" name="password" class="w-full border border-gray-300 p-2 rounded" placeholder="Leave blank to keep current password">
+                            <label for="confirmPassword" class="block text-sm">Confirm New Password</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" class="w-full border border-gray-300 p-2 rounded" required>
                         </div>
                         <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Save Changes</button>
                     </div>
                 </form>
-            </section>
+            </section>            
 
             <!-- Notification Preferences -->
             <section class="bg-white p-5 rounded-lg shadow-lg">
                 <h2 class="text-lg font-semibold">Notification Preferences</h2>
-                <div class="space-y-2">
+                <form action="/employee-dashboard/settings/set-notifications-sms" method="POST">
+                  <div class="space-y-2">
                     <div class="flex items-center">
-                        <input type="checkbox" id="emailNotifications" class="mr-2" checked>
-                        <label for="emailNotifications">Email Notifications</label>
+                      <input type="checkbox" id="emailNotifications" name="emailNotifications" class="mr-2" <%= employee.emailNotifications ? 'checked' : '' %> >
+                      <label for="emailNotifications">Email Notifications</label>
                     </div>
                     <div class="flex items-center">
-                        <input type="checkbox" id="smsNotifications" class="mr-2">
-                        <label for="smsNotifications">SMS Notifications</label>
+                      <input type="checkbox" id="smsNotifications" name="smsNotifications" class="mr-2" <%= employee.smsNotifications ? 'checked' : '' %> >
+                      <label for="smsNotifications">SMS Notifications</label>
                     </div>
-                    <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Update Preferences</button>
-                </div>
-            </section>
-
-            <!-- Privacy Settings -->
-            <section class="bg-white p-5 rounded-lg shadow-lg">
-                <h2 class="text-lg font-semibold">Privacy Settings</h2>
-                <div class="space-y-2">
-                    <div class="flex items-center">
-                        <input type="checkbox" id="dataSharing" class="mr-2" checked>
-                        <label for="dataSharing">Allow data sharing with third parties</label>
-                    </div>
-                    <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Save Privacy Settings</button>
-                </div>
-            </section>
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Update Preferences</button>
+                  </div>
+                </form>
+              </section>  
 
             <!-- Support Section -->
             <section class="bg-white p-5 rounded-lg shadow-lg">
@@ -101,8 +90,19 @@
     </div>
 
     <script>
-        // You can add any relevant scripts here if needed.
+        (async function() {
+        if (performance.navigation.type == 2) {
+            try {
+                const response = await fetch('/employee/check-state', { method: 'GET' });
+    
+                if (!response.ok) {
+                    window.location.href = "/employee-login";
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        })();
     </script>
 </body>
-
 </html>
