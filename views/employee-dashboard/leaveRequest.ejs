@@ -118,6 +118,20 @@
         <!-- Rightbar -->
         <%- include('../employee/right-bar') %>
     </div>
+    <script>
+        (async function() {
+        if (performance.navigation.type == 2) {
+            try {
+                const response = await fetch('/employee/check-state', { method: 'GET' });
+    
+                if (!response.ok) {
+                    window.location.href = "/employee-login";
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        })();
+    </script>
 </body>
-
 </html>

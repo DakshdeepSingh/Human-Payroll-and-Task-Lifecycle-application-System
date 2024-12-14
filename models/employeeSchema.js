@@ -46,6 +46,14 @@ const employeeSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+    },
+    emailNotifications: {
+        type: Boolean,
+        default: true
+    },
+    smsNotifications: {
+        type: Boolean,
+        default: false
     }
 });
 

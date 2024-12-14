@@ -31,6 +31,13 @@ app.use(session({
   cookie: { secure: process.env.NODE_ENV === 'production' } // Secure cookies only in production
 }));
 
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
+
 // Authenticate all routes
 app.use(passport.authenticate('session'));
 
@@ -38,6 +45,7 @@ app.use(passport.authenticate('session'));
 const employeeModel = require('./models/employeeSchema');
 const leaveRequestModel = require('./models/leaveRequestSchema');
 const taskModel = require('./models/taskSchema');
+const SupportRequestModel = require('./models/supportRequest');
 
 const employeeController = require('./controllers/employeeController');
 const leaveRequestController = require('./controllers/leaveRequestController');
@@ -117,12 +125,21 @@ const ensureAdmin = (req, res, next) => {
 // Apply middleware to all admin routes
 app.use('/admin', ensureAdmin);
 
+const isAdminSessionAvailable = (req, res, next) => {
+  if (req.session.adminId) {
+    return true;
+  }
+  return false;
+}
+
 const checkAdminLoggedIn = (req, res, next) => {
   if (req.session.adminId) {
     return res.redirect('/admin/admin-dashboard'); // Redirect to the dashboard if logged in
   }
   next(); // Otherwise, allow access to the login page
 };
+
+app.get("/admin/check-state", isAdminSessionAvailable, (req, res) => {});
 
 app.get("/admin-login", checkAdminLoggedIn, (req, res) => {
   passport.authenticate('session'),
@@ -172,12 +189,21 @@ app.get('/admin/logout', (req, res) => {
 
 // MARK:- Employee Log In and Log Out
 
+const isEmployeeSessionAvailable = (req, res, next) => {
+  if (req.session.adminId) {
+    return true;
+  }
+  return false;
+}
+
 const checkEmployeeLoggedIn = (req, res, next) => {
   if (!req.session.employeeId) {
     return res.redirect('/employee-login'); // Redirect to login if not signed in
   }
   next(); // Proceed to the next middleware or route handler
 };
+
+app.get("/employee/check-state", isEmployeeSessionAvailable, (req, res) => {});
 
 // Employee login page
 app.get("/employee-login", (req, res) => {
@@ -281,6 +307,19 @@ app.get("/admin/IDCard", async (req, res) => {
       res.status(500).send("Error retrieving employee information. Please try again later.");
   }
 });
+app.get("/admin/admin-payroll", async (req, res) => {
+  try {
+      const employeeRequests = await employeeModel.find({}, 'userId firstName lastName designation salary');
+      const taskRequests = await taskModel.find({});
+      res.render("admin-dashboard/admin-payroll", {
+        employees: employeeRequests,
+        tasks: taskRequests
+      });
+  } catch (err) {
+      console.error("Error fetching task data:", err);
+      res.status(500).send("Error retrieving task information. Please try again later.");
+  }
+});
 app.get("/admin/admin-task", async (req, res) => {
   try {
       const employeeRequests = await employeeModel.find({}, 'userId firstName lastName designation');
@@ -303,6 +342,7 @@ app.get('/admin/tasks', async (req, res) => {
       res.status(500).send("Internal Server Error");
   }
 });
+app.post('/admin/toggle-task-status', taskController.taskToggleStatus);
 app.post('/admin/add-task', taskController.taskAssignment);
 app.delete('/admin/delete-task', taskController.taskDelete);
 
@@ -356,7 +396,6 @@ app.get("/employee-dashboard/task", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-app.post('/admin/toggle-task-status', taskController.taskToggleStatus);
 
 app.get("/employee-dashboard/attendance", async (req, res) => {
   try {
@@ -432,13 +471,97 @@ app.get("/employee-dashboard/settings", async (req, res) => {
     const user = await employeeModel.findOne({ userId: id });
     res.render("employee-dashboard/settings", {
       username: user.firstName + " " + user.lastName,
-      userId: user.userId
+      userId: user.userId,
+      employee: user
     });
   } catch (err) {
     console.error("Error Retreiving Data: ", err);
     res.status(500).send("Internal Server Error");
   }
 });
+
+app.post("/employee-dashboard/settings/update-password", async (req, res) => {
+  try {
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+    const userId = req.session.employeeId;
+
+    // Find the employee by userId
+    const employee = await employeeModel.findOne({ userId: userId });
+
+    if (!employee) {
+      return res.status(404).send("Employee not found");
+    }
+
+    // Check if old password matches the current password
+    const isOldPasswordValid = await bcrypt.compare(oldPassword, employee.password);
+    if (!isOldPasswordValid) {
+      return res.status(400).send("Old password is incorrect");
+    }
+
+    // Check if the new password and confirm password match
+    if (newPassword !== confirmPassword) {
+      return res.status(400).send("New passwords do not match");
+    }
+
+    // Hash the new password before saving
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the password in the database
+    employee.password = hashedNewPassword;
+    await employee.save();
+
+    // Redirect or send a response
+    res.redirect("/employee-dashboard/settings"); // Redirect back to settings page or dashboard
+
+  } catch (err) {
+    console.error("Error updating password:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.post("/employee-dashboard/settings/set-notifications-sms", async (req, res) => {
+  try {
+    const { emailNotifications, smsNotifications } = req.body;
+    const userId = req.session.employeeId;
+
+    // Find the user by ID and update the notification preferences
+    const updatedUser = await employeeModel.findOneAndUpdate(
+      { userId: userId },
+      { emailNotifications: emailNotifications === 'on', smsNotifications: smsNotifications === 'on' },
+      { new: true }
+    );
+
+    res.redirect("/employee-dashboard/settings"); // Redirect to the settings page after updating preferences
+  } catch (err) {
+    console.error("Error updating notification preferences:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Support request route
+app.post("/support/request", async (req, res) => {
+  try {
+    const { issue } = req.body;
+    const userId = req.session.employeeId;
+
+    // Assuming you have a SupportRequest model to store support requests
+    const newRequest = new SupportRequestModel({
+      userId: userId,
+      issue: issue,
+      createdAt: new Date(),
+    });
+
+    // Save the support request
+    await newRequest.save();
+
+    // Redirect to a confirmation page or back to the dashboard
+    res.redirect("/employee-dashboard"); // Or render a confirmation message
+  } catch (err) {
+    console.error("Error submitting support request:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 
 passport.serializeUser(function(user, cb) {
   process.nextTick(function() {
