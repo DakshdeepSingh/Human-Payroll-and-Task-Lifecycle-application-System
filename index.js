@@ -6,7 +6,7 @@ const PORT = 8000;
 const bodyParser = require('body-parser');
 var session = require('express-session');
 var passport = require('passport');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 // Set EJS as the template engine
 app.set('view engine', 'ejs');

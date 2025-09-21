@@ -1,6 +1,6 @@
 const express = require('express');
 const employee = require('../models/employeeSchema');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const addEmployee = async (req, res) => {
     try {
