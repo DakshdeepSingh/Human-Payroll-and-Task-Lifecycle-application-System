@@ -2,9 +2,12 @@
 
 This is a Node.js and Express-based web application for managing employee payroll, attendance, leave requests, tasks, and support requests. It features admin and employee dashboards, authentication, and session management.
 
+## Admin Login Credentials
+
+**Admin Email:** admin@hrsuite.com  
+**Admin Password:** password@12
+
 ## Features
-- Admin and Employee login/logout
-- Employee management (add, view, update)
 - Leave request and approval system
 - Task assignment and tracking
 - Payroll management
